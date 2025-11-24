@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiningPRO - Ödeme Tamamlama</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Ana Sayfa Stillerinden Gelen Temel Ayarlar (Tutarlılık için) */
+        body, html {
+            margin: 0; padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #0D1117; 
+            color: #E6EDF3; 
+            min-height: 100vh;
+            padding-bottom: 70px;
+            line-height: 1.6;
+        }
+        .wrapper {
+            max-width: 550px;
+            margin: 15px auto;
+            padding: 0 15px;
+        }
+        header {
+            background: #161B22;
+            padding: 15px;
+            text-align: center;
+            font-size: 26px;
+            font-weight: 800;
+            color: #F3BA2F; /* Ödeme sayfasında altın sarısı başlık */
+            text-shadow: 0 0 10px rgba(243, 186, 47, 0.6); 
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.8);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #F3BA2F;
+        }
+        header i { margin-right: 10px; }
+
+        /* Kart Stili */
+        .card {
+            background: #161B22;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            border: 1px solid #2D333B;
+        }
+        .card h2 {
+            color: #00BFFF;
+            font-size: 22px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #2D333B;
+            padding-bottom: 10px;
+            font-weight: 700;
+        }
+
+        /* Paket Bilgi Kartı Stili */
+        #package-summary {
+            background: #1F2A35;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 5px solid #4CD964;
+        }
+        #package-summary p {
+            margin: 5px 0;
+            font-size: 15px;
+            color: #A0AEC0;
+        }
+        #package-summary strong {
+            color: #E6EDF3;
+            font-weight: 600;
+        }
+        #total-price {
+            display: block;
+            font-size: 30px;
+            font-weight: 800;
+            color: #4CD964;
+            margin-top: 10px;
+            text-shadow: 0 0 10px rgba(76, 217, 100, 0.5);
+        }
+
+        /* Ödeme Seçenekleri (Dropdown/Select) */
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #00BFFF;
+            font-size: 18px;
+        }
+        select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            background: #2D333B;
+            color: #E6EDF3;
+            border: 1px solid #444;
+            font-size: 16px;
+            appearance: none; 
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        select:focus {
+            outline: none;
+            border-color: #F3BA2F;
+        }
+
+        /* Dinamik Ödeme Form Alanı */
+        #payment-details {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            background: #1F2A35;
+            border: 1px solid #444;
+            min-height: 150px;
+        }
+
+        /* Ortak Form Alanları */
+        .payment-form input[type="text"],
+        .payment-form input[type="file"],
+        .payment-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            background: #2D333B;
+            color: #E6EDF3;
+            border: 1px solid #444;
+            box-sizing: border-box;
+        }
+        .payment-form input[type="file"] {
+            border: 1px dashed #F3BA2F;
+            padding: 20px;
+            cursor: pointer;
+        }
+        
+        /* Ödeme Bilgileri Alanı (Havale/Kripto Detayları) */
+        .account-info {
+            background: #2D333B;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 5px solid #F3BA2F;
+            font-size: 14px;
+        }
+        .account-info code {
+            display: block;
+            background: #0D1117;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 5px;
+            word-break: break-all;
+            color: #4CD964;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .copy-btn {
+            background: #00BFFF;
+            color: #0D1117;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        .copy-btn:hover { background: #4DCEFF; }
+
+        /* Gönder Butonu */
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 18px;
+            background: #4CD964; /* Yeşil */
+            color: #0D1117;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 20px;
+            box-shadow: 0 6px 20px rgba(76, 217, 100, 0.6);
+        }
+        .submit-btn:hover { 
+            background: #66FF88;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(76, 217, 100, 0.8);
+        }
+
+        /* Teşekkür Ekranı */
+        #thank-you-screen {
+            text-align: center;
+            padding: 50px 20px;
+            display: none; /* Başlangıçta gizli */
+        }
+        #thank-you-screen i {
+            font-size: 60px;
+            color: #4CD964;
+            margin-bottom: 20px;
+            animation: bounce 0.8s ease-in-out;
+        }
+        #thank-you-screen h2 {
+            color: #00BFFF;
+        }
+        #thank-you-screen p {
+            font-size: 16px;
+            color: #A0AEC0;
+            margin-top: 15px;
+        }
+        .home-btn {
+            background: #F3BA2F;
+            color: #0D1117;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            margin-top: 30px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* Animasyon */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* Uyarı Sistemi (Main Page'den alındı) */
+        #floatingAlert {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
+            z-index: 10000; padding: 15px 25px; border-radius: 10px; font-weight: 700;
+            color: #121212; box-shadow: 0 5px 20px rgba(0,0,0,0.4); transition: opacity 0.4s, transform 0.4s;
+            opacity: 0; pointer-events: none; max-width: 90%; text-align: center;
+        }
+        #floatingAlert.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .alert-success { background: #4cd964; }
+        .alert-error { background: #ff0057; }
+        .alert-warning { background: #f3ba2f; }
+        .alert-info { background: #00bfff; }
+    </style>
+</head>
+<body>
+
+<div id="floatingAlert" class="alert-success"></div>
+
+<header><i class="fas fa-money-check-alt"></i> ÖDEME SAYFASI</header>
+<div class="wrapper">
+
+    <div class="card" id="thank-you-screen">
+        <i class="fas fa-check-circle"></i>
+        <h2>🎉 Siparişiniz Alındı!</h2>
+        <p>Dekontunuz başarıyla bize iletildi. **Teşekkür ederiz!**</p>
+        <p>En kısa sürede (genellikle 5-15 dakika) ödemeniz kontrol edilecek ve hız kodunuz/paketinize erişiminiz **e-posta ve uygulama içi bildirim** ile size ulaştırılacaktır.</p>
+        <button class="home-btn" onclick="goToHomePage()">Kazım Sayfasına Dön</button>
+    </div>
+
+    <div id="payment-form-container">
+        <div class="card">
+            <h2>📦 Sipariş Detayları</h2>
+            <div id="package-summary">
+                <p>Seçilen Paket: <strong id="summary-name">Yükleniyor...</strong></p>
+                <p>Hız Çarpanı: <strong id="summary-speed">--</strong></p>
+                <p>Süre: <strong id="summary-duration">--</strong></p>
+                <span id="total-price">-- USDT</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>💳 Ödeme Yöntemi Seçin</h2>
+            <div class="form-group">
+                <label for="payment-method">Yöntem:</label>
+                <select id="payment-method" onchange="updatePaymentDetails()">
+                    <option value="">Lütfen Bir Ödeme Yöntemi Seçiniz</option>
+                    <option value="crypto">Kripto Para (USDT, BTC, ETH)</option>
+                    <option value="eft">Havale / EFT / FAST</option>
+                    <option value="card">Kredi Kartı / Banka Kartı</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="card" id="payment-details">
+            <p style="text-align: center; color: #777;">Lütfen ödeme yöntemi seçiniz.</p>
+        </div>
+    </div>
+
+</div>
+
+<script>
+let selectedPackage = {};
+let alertTimeout = null;
+
+// --- UYARI FONKSİYONU ---
+function showFloatingAlert(message, type = 'success', duration = 3000) {
+    const alertEl = document.getElementById('floatingAlert');
+    if (!alertEl) return;
+    clearTimeout(alertTimeout);
+    alertEl.className = '';
+    alertEl.classList.add(`alert-${type}`);
+    alertEl.innerText = message;
+    alertEl.classList.add('show');
+    alertTimeout = setTimeout(() => {
+        alertEl.classList.remove('show');
+    }, duration);
+}
+
+// --- KOPYALAMA FONKSİYONU ---
+function copyToClipboard(text, elementId) {
+    navigator.clipboard.writeText(text).then(() => {
+        showFloatingAlert(`${elementId} kopyalandı!`, 'success');
+    }).catch(err => {
+        console.error('Kopyalama başarısız oldu: ', err);
+    });
+}
+
+// --- ÖDEME DETAYLARINI GÜNCELLEME ---
+function updatePaymentDetails() {
+    const method = document.getElementById('payment-method').value;
+    const detailsDiv = document.getElementById('payment-details');
+    let content = '';
+
+    if (!selectedPackage.price) {
+        detailsDiv.innerHTML = '<p style="text-align: center; color: #ff0057;">Hata: Paket fiyat bilgisi yüklenemedi. Lütfen sayfayı yenileyin.</p>';
+        return;
+    }
+    
+    // Kripto Para Ödeme Formu
+    if (method === 'crypto') {
+        content = `
+            <h2><i class="fas fa-coins"></i> Kripto Ödeme (USDT TRC-20)</h2>
+            <p>Lütfen toplam **${selectedPackage.price} USDT** tutarını aşağıdaki adrese gönderdikten sonra dekontunuzu yükleyiniz.</p>
+            
+            <div class="account-info">
+                <strong>USDT (TRC-20) Adresi:</strong>
+                <code id="crypto-address-code">TRC20x098d7fA3eB4C5D6F7G8H9I0J1K2L3M4N5O6P7Q8R</code>
+                <button class="copy-btn" onclick="copyToClipboard('TRC20x098d7fA3eB4C5D6F7G8H9I0J1K2L3M4N5O6P7Q8R', 'Adres')">Adresi Kopyala</button>
+            </div>
+
+            <form class="payment-form" onsubmit="handlePaymentSubmit(event, 'Kripto')">
+                <input type="text" placeholder="Gönderici Cüzdan Adresi (Kontrol için)" required>
+                <input type="file" accept="image/*,.pdf" required>
+                <button type="submit" class="submit-btn">Ödemeyi Tamamla ve Dekont Yükle</button>
+            </form>
+        `;
+    // Havale/EFT Ödeme Formu
+    } else if (method === 'eft') {
+        const tlPrice = (selectedPackage.price * 32.50).toFixed(2); // Örnek Kur
+        content = `
+            <h2><i class="fas fa-university"></i> Havale / EFT / FAST</h2>
+            <p>Lütfen toplam **${selectedPackage.price} USDT** karşılığı olan yaklaşık **${tlPrice} TL** tutarını aşağıdaki hesaba gönderiniz.</p>
+            
+            <div class="account-info">
+                <strong>Banka Adı:</strong> Mining Ödeme Hizmetleri A.Ş. <br>
+                <strong>IBAN No:</strong>
+                <code id="iban-code">TR990001000000000000000001</code>
+                <button class="copy-btn" onclick="copyToClipboard('TR990001000000000000000001', 'IBAN')">IBAN Kopyala</button>
+            </div>
+
+            <form class="payment-form" onsubmit="handlePaymentSubmit(event, 'EFT')">
+                <input type="text" placeholder="Adınız Soyadınız (Dekonttaki Adınız)" required>
+                <input type="file" accept="image/*,.pdf" required>
+                <button type="submit" class="submit-btn">Ödemeyi Tamamla ve Dekont Yükle</button>
+            </form>
+        `;
+    // Kredi Kartı Ödeme (Yönlendirme Simülasyonu)
+    } else if (method === 'card') {
+        content = `
+            <h2><i class="fas fa-credit-card"></i> Kredi Kartı / Banka Kartı</h2>
+            <p>Kartlı ödeme yöntemi ile **${selectedPackage.price} USDT** karşılığı TL tutarını güvenli ödeme sistemimiz üzerinden tamamlayabilirsiniz. Yönlendirme yapılacaktır.</p>
+            
+            <p style="text-align:center; color:#F3BA2F; font-weight:600;"><i class="fas fa-lock"></i> Bu yöntemi seçtiğinizde harici güvenli ödeme sayfasına yönlendirileceksiniz.</p>
+            
+            <form class="payment-form" onsubmit="handlePaymentSubmit(event, 'Kart', true)">
+                <input type="text" placeholder="Kart Üzerindeki Ad Soyad" required>
+                <button type="submit" class="submit-btn" style="background: #00BFFF; box-shadow: 0 6px 20px rgba(0, 191, 255, 0.6);">Güvenli Ödeme Sayfasına Git</button>
+            </form>
+        `;
+    } else {
+        content = '<p style="text-align: center; color: #777;">Lütfen ödeme yöntemi seçiniz.</p>';
+    }
+
+    detailsDiv.innerHTML = content;
+}
+
+// --- ÖDEME FORMU GÖNDERİMİ VE YÖNLENDİRME ---
+function handlePaymentSubmit(event, method, isCard = false) {
+    event.preventDefault(); 
+    
+    if (isCard) {
+        // Kart ödemesinde dekont yükleme yok, direkt sanal ödeme sayfasına yönlendirir (simülasyon)
+        showFloatingAlert('Güvenli ödeme sayfasına yönlendiriliyorsunuz...', 'info');
+        setTimeout(() => {
+            showThankYouScreen(); 
+        }, 1500); 
+    } else {
+        // EFT/Kripto (Dekont Yükleme tamamlandı)
+        showThankYouScreen();
+    }
+}
+
+// --- TEŞEKKÜR EKRANINI GÖSTERME ---
+function showThankYouScreen() {
+    document.getElementById('payment-form-container').style.display = 'none';
+    const thankYouScreen = document.getElementById('thank-you-screen');
+    thankYouScreen.style.display = 'block';
+    
+    showFloatingAlert("Siparişiniz başarıyla alındı! Yönlendiriliyorsunuz...", 'success', 4000);
+
+    // 8 saniye sonra otomatik ana sayfaya yönlendirme
+    setTimeout(goToHomePage, 8000); 
+}
+
+// --- ANASAYFAYA YÖNLENDİRME ---
+function goToHomePage() {
+    // Gerçek ana sayfanızın adı miningpro.html ise
+    window.location.href = 'miningpro.html'; 
+    // Eğer kazım sayfanızın adı 'hizal.html' ise, oraya yönlendirebilirsiniz.
+    // window.location.href = 'hizal.html'; 
+}
+
+// --- SAYFA BAŞLANGICI ---
+document.addEventListener('DOMContentLoaded', () => {
+    // URL'den parametreleri al (hizal.html'den gelenler)
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    const name = urlParams.get('name');
+    const speed = urlParams.get('speed');
+    const price = parseFloat(urlParams.get('price'));
+    const duration = urlParams.get('duration');
+
+    if (name && !isNaN(price)) {
+        selectedPackage = { name, speed, price, duration };
+        
+        // Paket özetini doldur
+        document.getElementById('summary-name').innerText = name;
+        document.getElementById('summary-speed').innerText = `${speed}x`;
+        document.getElementById('summary-duration').innerText = `${duration} Gün`;
+        document.getElementById('total-price').innerText = `${price.toFixed(2)} USDT`; // Fiyatı 2 ondalık basamakla göster
+        
+        showFloatingAlert(`Paket: ${name} (${price.toFixed(2)} USDT) yüklendi.`, 'success', 2000);
+    } else {
+        // Paket bilgisi yoksa uyarı ver
+        showFloatingAlert("Hata: Paket bilgileri bulunamadı. Ana sayfaya yönlendiriliyor...", 'error', 5000);
+        setTimeout(() => { window.location.href = 'hizal.html'; }, 5000); 
+    }
+});
+</script>
+</body>
+</html>

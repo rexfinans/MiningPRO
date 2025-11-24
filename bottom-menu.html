@@ -1,0 +1,104 @@
+<style>
+  /* Alt Menü Genel */
+  #bottomMenu {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    /* Önceki sayfalardaki tema ile uyumlu arka plan rengi: #161b22 */
+    background: #161b22; 
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 12px 0;
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.5); /* Daha belirgin gölge */
+    z-index: 9999;
+    font-family: 'Poppins', sans-serif;
+}
+
+  #bottomMenu a {
+    color: #777; /* Pasif ikon/yazı rengi */
+    text-decoration: none;
+    font-weight: 500; /* Biraz daha ince font */
+    text-align: center;
+    font-size: 12px; /* Daha küçük font */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.3s ease;
+    flex: 1;
+  }
+
+  /* Aktif/Hover Renk Vurgusu: #f3ba2f (Sarı) */
+  #bottomMenu a.active, #bottomMenu a:hover {
+    color: #f3ba2f;
+  }
+
+  #bottomMenu a span.icon {
+    font-size: 20px;
+    margin-bottom: 4px;
+    display: block; /* İkonun tam genişlik alması için */
+  }
+
+  @media(max-width:480px){
+    #bottomMenu a span.icon { font-size: 18px; }
+    #bottomMenu a { font-size: 11px; }
+  }
+</style>
+
+<div id="bottomMenu">
+  <a href="miningpro.html" id="miningMenu">
+    <span class="icon">
+        <i class="fas fa-tachometer-alt"></i>
+    </span>
+    Kazım
+  </a>
+  <a href="hizal.html" id="speedMenu">
+    <span class="icon">
+        <i class="fas fa-bolt"></i>
+    </span>
+    Hız Al
+  </a>
+  <a href="kazan.html" id="bonusMenu">
+    <span class="icon">
+        <i class="fas fa-trophy"></i>
+    </span>
+    Kazan
+  </a>
+  <a href="cüzdanım.html" id="walletMenu">
+    <span class="icon">
+        <i class="fas fa-wallet"></i>
+    </span>
+    Cüzdanım
+  </a>
+</div>
+
+<script>
+  // Aktif menüyü işaretleme
+  document.addEventListener('DOMContentLoaded', () => {
+      const path = window.location.pathname;
+      const currentPage = path.substring(path.lastIndexOf('/') + 1); // Dosya adını al
+
+      // Önceki sayfaların menü yapılarıyla uyumlu olması için tam dosya adlarını kullanıyoruz.
+      // Ayrıca Font Awesome ikonları kullanılmıştır.
+      
+      // Tüm menü elemanlarının "active" sınıfını kaldır
+      document.querySelectorAll('#bottomMenu a').forEach(link => {
+          link.classList.remove('active');
+      });
+
+      // Hangi menü elemanının aktif olduğunu kontrol et
+      if(currentPage === "miningpro.html" || currentPage === "") {
+          document.getElementById("miningMenu").classList.add("active");
+      }
+      else if(currentPage === "hizal.html") {
+          document.getElementById("speedMenu").classList.add("active");
+      }
+      else if(currentPage === "kazan.html") {
+          document.getElementById("bonusMenu").classList.add("active");
+      }
+      else if(currentPage === "cüzdanım.html") {
+          document.getElementById("walletMenu").classList.add("active");
+      }
+  });
+</script> 

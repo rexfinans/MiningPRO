@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiningPRO - Kazan & Ödüller</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ========================================================================= */
+/* --- GENEL STİLLER VE TEMA --- */
+/* ========================================================================= */
+body, html{
+  margin:0; padding:0;
+  font-family: 'Poppins', sans-serif;
+  background: #0d1117;
+  color:#f4f4f4;
+  min-height:100vh;
+  padding-bottom: 70px;
+}
+* { box-sizing: border-box; }
+.wrapper{
+  max-width:500px;
+  margin:15px auto;
+  padding:0 15px;
+}
+header{
+  background:#161b22;
+  padding:15px;
+  text-align:center;
+  font-size:26px;
+  font-weight:800;
+  color:#f3ba2f; /* Sarı Vurgu */
+  text-shadow: 0 0 10px rgba(243, 186, 47, 0.4);
+  box-shadow:0 3px 15px rgba(0,0,0,0.8);
+  position:sticky;
+  top:0;
+  z-index:100;
+  border-bottom: 1px solid #f3ba2f;
+}
+header i { margin-right: 10px; }
+.card{
+  background:#161b22;
+  border-radius:12px;
+  padding:20px;
+  margin-bottom:20px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.5);
+  border: 1px solid #2d333b;
+}
+.card h2 {
+    color: #00bfff; /* Mavi Başlık Vurgusu */
+    font-size: 20px;
+    margin-bottom: 15px;
+    border-bottom: 1px dashed #2d333b;
+    padding-bottom: 10px;
+}
+
+/* ========================================================================= */
+/* --- DAVET ET VE KAZAN ALANI (REVİZE) --- */
+/* ========================================================================= */
+.referral-card {
+    text-align: center;
+}
+.referral-card h3 {
+    color: #4cd964;
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+.ref-info {
+    background: #0d1117;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border: 2px solid #2d333b;
+}
+#refCode {
+    font-size: 22px;
+    font-weight: 800;
+    color: #f3ba2f; /* Sarı kod */
+    display: block;
+    margin-top: 5px;
+    letter-spacing: 2px;
+}
+.copy-link-btn {
+    background: #00bfff;
+    color: #0d1117;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    width: 100%;
+    margin-top: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 191, 255, 0.4);
+}
+.copy-link-btn:hover { background: #33cfff; }
+
+.ref-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+.stat-box {
+    padding: 10px;
+    flex: 1;
+    margin: 0 5px;
+    border-radius: 8px;
+    background: #2d333b;
+}
+.stat-box .count {
+    font-size: 28px;
+    font-weight: 800;
+    color: #4cd964;
+    margin: 5px 0;
+}
+.stat-box .label {
+    font-size: 12px;
+    color: #ccc;
+}
+
+/* ========================================================================= */
+/* --- GÖREV LİSTESİ (REVİZE) --- */
+/* ========================================================================= */
+.reward-item {
+    background: #1f2a35;
+    padding: 18px;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 5px solid #2d333b;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    transition: all 0.3s;
+}
+.reward-details h3 {
+    margin: 0;
+    color: #00bfff;
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+}
+.reward-details h3 i { margin-right: 8px; color: #f3ba2f; }
+.reward-details p {
+    margin: 5px 0 0 0;
+    font-size: 13px;
+    color: #ccc;
+}
+.collect-btn {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    background: #f3ba2f; /* Sarı Aksiyon */
+    color: #0d1117;
+    cursor: pointer;
+    transition: 0.3s;
+    white-space: nowrap;
+    min-width: 100px;
+    box-shadow: 0 3px 8px rgba(243, 186, 47, 0.4);
+}
+.collect-btn:hover { background: #ffc73a; }
+
+/* Durum Stilleri */
+.ready-to-collect { 
+    border-left-color: #4cd964; /* Yeşil */
+    box-shadow: 0 0 10px rgba(76, 217, 100, 0.5);
+}
+.ready-to-collect .collect-btn {
+    background: #4cd964;
+    color: #0d1117;
+    box-shadow: 0 3px 8px rgba(76, 217, 100, 0.4);
+}
+
+.completed-reward { 
+    border-left-color: #00bfff; /* Mavi */
+    opacity: 0.7;
+}
+.completed-reward .collect-btn {
+    background: #00bfff;
+    color: #0d1117;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+.disabled-action {
+    background: #555 !important; 
+    color: #aaa !important; 
+    cursor: not-allowed !important; 
+    box-shadow: none !important;
+}
+
+/* ========================================================================= */
+/* --- ALT MENÜ --- */
+/* ========================================================================= */
+.bottom-menu { 
+    position:fixed; bottom:0; left:0; width:100%; display:flex; justify-content:space-around;
+    background:#161b22; padding:10px 0; box-shadow:0 -5px 15px rgba(0,0,0,0.5); z-index:99;
+    border-top: 1px solid #2d333b;
+}
+.bottom-menu a {
+    flex:1; text-decoration: none; text-align: center; margin:0 5px; padding:8px 0;
+    font-size:12px; background:transparent; color:#777; border-radius:8px; transition:.3s;
+    font-weight: 600;
+}
+.bottom-menu a i { font-size: 20px; display: block; margin-bottom: 4px; }
+.bottom-menu a.active { 
+    color:#f3ba2f; 
+    background: rgba(243, 186, 47, 0.1); 
+    text-shadow: 0 0 5px rgba(243, 186, 47, 0.6);
+}
+/* Ek uyarı stili */
+#security-warning {
+    background: #ff0057;
+    color: #0d1117;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 15px;
+    font-weight: 700;
+    text-align: center;
+}
+</style>
+</head>
+<body>
+<header><i class="fas fa-trophy"></i> Kazan & Ödüller</header>
+<div class="wrapper">
+
+    <div class="card referral-card">
+        <h2>🔗 Arkadaşını Davet Et</h2>
+        <h3>Sınırsız Pasif Gelir Kaynağı</h3>
+        <div class="ref-info">
+            <p>Sizin Davet Kodunuz:</p>
+            <span id="refCode">Yükleniyor...</span>
+        </div>
+        
+        <div class="ref-stats">
+            <div class="stat-box">
+                <div class="count" id="invitedCount">0</div>
+                <div class="label">Davet Edilen Kişi</div>
+            </div>
+            <div class="stat-box">
+                <div class="count" id="totalRefReward">0.00 USDT</div>
+                <div class="label">Toplam Davet Ödülü</div>
+            </div>
+        </div>
+        
+        <button class="copy-link-btn" onclick="copyReferralLink()">
+            <i class="fas fa-share-alt"></i> Davet Linkini Kopyala
+        </button>
+
+        <p class="info-text" style="color:#f3ba2f; margin-top: 15px;">**Her Onaylı Davetli Başına 0.25 USDT** otomatik olarak cüzdanınıza eklenir!</p>
+    </div>
+
+    <div class="card">
+        <h2>⭐ Görevler ve Ekstra Ödüller</h2>
+        
+        <div class="reward-item" id="dailyRewardItem">
+            <div class="reward-details">
+                <h3><i class="fas fa-calendar-day"></i> Günlük Giriş Ödülü</h3>
+                <p>Her 24 saatte bir giriş yap, **0.5 USDT** kazan.</p>
+            </div>
+            <button class="collect-btn disabled-action" id="dailyCollectBtn" data-reward-id="daily">Yükleniyor</button>
+        </div>
+
+        <div class="reward-item" id="twitterFollowReward">
+            <div class="reward-details">
+                <h3><i class="fab fa-twitter"></i> Twitter Takip Et</h3>
+                <p>Resmi hesabımızı takip et ve **1.0 USDT** kazan.</p>
+            </div>
+            <button class="collect-btn" id="twitterFollowBtn" data-reward-id="twitter">Hesaba Git</button>
+        </div>
+        
+        <div class="reward-item" id="telegramJoinReward">
+            <div class="reward-details">
+                <h3><i class="fab fa-telegram-plane"></i> Telegram Grubuna Katıl</h3>
+                <p>Telegram kanalımıza katıl ve **1.0 USDT** kazan.</p>
+            </div>
+            <button class="collect-btn" id="telegramJoinBtn" data-reward-id="telegram">Gruba Katıl</button>
+        </div>
+
+        <div class="reward-item" id="firstMiningReward">
+            <div class="reward-details">
+                <h3><i class="fas fa-clock"></i> 5 Kez Kazımı Başlat</h3>
+                <p>Toplamda 5 kez kazım seansı başlatırsanız **1.0 USDT** kazanın.</p>
+            </div>
+            <button class="collect-btn disabled-action" id="miningStartBtn" data-reward-id="mining">Gereksinim: 0/5</button>
+        </div>
+        
+        <div class="reward-item" id="firstSpeedBuyReward">
+            <div class="reward-details">
+                <h3><i class="fas fa-bolt"></i> İlk Hız Paketi Alımı</h3>
+                <p>İlk hız paketinizi satın alın, **2.0 USDT** geri kazanın.</p>
+            </div>
+            <button class="collect-btn" id="speedBuyBtn" data-reward-id="speed">Satın Al</button>
+        </div>
+    </div>
+    
+    <div id="message" style="margin-top:20px; text-align:center; font-weight:600; color:#00bfff;">Veriler yükleniyor...</div>
+    
+    <div id="security-warning">
+        ❗ **ÖNEMLİ:** Bu sayfa, kritik **Firebase Firestore İşlemleri (Transaction)** kullanır. Veri bütünlüğünü sağlamak için sunucu tarafı Güvenlik Kurallarını (Security Rules) ayarladığınızdan emin olun.
+    </div>
+
+</div>
+
+<div class="bottom-menu">
+  <a href="miningpro.html" id="tabMining"><i class="fas fa-tachometer-alt"></i> Kazım</a>
+  <a href="hizal.html" id="tabHizAl"><i class="fas fa-bolt"></i> Hız Al</a>
+  <a href="#" id="tabKazan" class="active"><i class="fas fa-trophy"></i> Kazan</a>
+  <a href="cüzdanım.html" id="tabWallet"><i class="fas fa-wallet"></i> Cüzdanım</a>
+</div>
+<script>
+/* ========================================================================= */
+/* --- GİRİŞ KONTROLÜ (GÜVENLİK) --- */
+/* Bu kod, Firebase yüklenmeden önce çalışır ve giriş yapmayanı engeller. */
+/* ========================================================================= */
+function checkLogin() {
+    // Varsayılan kontrol: `isLoggedIn` bayrağını kontrol et
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    
+    if (isLoggedIn !== 'true') {
+        // Hızlı yönlendirme (index.html'ye)
+        window.location.href = 'index.html'; 
+        // Yönlendirme tamamlanana kadar sayfanın yüklenmesini durdur
+        return false; 
+    }
+    return true;
+}
+
+if (!checkLogin()) {
+    // Eğer yönlendirme gerçekleştiyse, aşağıdaki kodların çalışmasını engelle.
+    throw new Error("Kullanıcı girişi yapılmamış. Yönlendiriliyor...");
+}
+</script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, updateDoc, increment, runTransaction } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
+
+// 🔥🔥🔥 LÜTFEN KENDİ FIREBASE AYARLARINIZLA DEĞİŞTİRİN 🔥🔥🔥
+const firebaseConfig = {
+  apiKey: "AIzaSyBwpgITzHh2K3oYTRDaNbGVexPR8IcqXBU",
+  authDomain: "coinbase-a1aca.firebaseapp.com",
+  projectId: "coinbase-a1aca",
+  storageBucket: "coinbase-a1aca.firebasestorage.app",
+  messagingSenderId: "596259885244",
+  appId: "1:596259885244:web:186df79a6ccdc96f0d00b9",
+  measurementId: "G-Q4SMPE62HF"
+};
+
+const TWITTER_URL = "https://twitter.com/MiningProTR";
+const TELEGRAM_URL = "https://t.me/MiningProOfficial";
+
+// Davet linki, kullanıcının sadece UID'sinin ilk 8 karakterini kullanır.
+// 🔥 DİKKAT: Kayıt sayfanızdaki (index.html) referans kontrolünün buna uygun olması gerekir.
+const REFERRAL_BASE_URL = window.location.origin + "/index.html?ref=";
+const REFERRAL_REWARD_AMOUNT = 0.25; // Her davetli için ödül
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth();
+const db = getFirestore();
+
+let currentUser = null;
+let userData = null;
+
+const messageEl = document.getElementById('message');
+const refCodeEl = document.getElementById('refCode');
+const invitedCountEl = document.getElementById('invitedCount');
+const totalRefRewardEl = document.getElementById('totalRefReward');
+
+// Ödül Tanımları
+const REWARDS = {
+    daily: { name: "Günlük Giriş", amount: 0.5, key: 'lastDailyReward', timeLimit: 86400000 }, // 24 saat
+    twitter: { name: "Twitter Takip", amount: 1.0, collectedKey: 'collectedTwitter', actionURL: TWITTER_URL },
+    telegram: { name: "Telegram Katılım", amount: 1.0, collectedKey: 'collectedTelegram', actionURL: TELEGRAM_URL },
+    mining: { name: "Kazım Görevi", amount: 1.0, collectedKey: 'collectedMining', required: 5 },
+    speed: { name: "Hız Satın Alımı", amount: 2.0, collectedKey: 'collectedSpeed', required: true }
+};
+
+onAuthStateChanged(auth, async (user) => {
+    if (user) {
+        currentUser = user;
+        
+        await loadUserData(user.uid);
+        renderRewards();
+    } else {
+        // Firebase Auth'a göre giriş yapmamışsa (Daha yavaş ama kesin kontrol)
+        messageEl.style.color = '#ff0057';
+        messageEl.innerText = "Oturum açma hatası. Giriş sayfasına yönlendiriliyorsunuz...";
+        setTimeout(() => { window.location.href = "index.html"; }, 3000); 
+    }
+});
+
+async function loadUserData(uid) {
+    const docRef = doc(db, "users", uid);
+    try {
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            userData = docSnap.data();
+            // Varsayılan değerler oluşturma (kodda null kontrolü yapmayı kolaylaştırır)
+            if (!userData.mainBalance) userData.mainBalance = { USDT: 0 };
+            if (typeof userData.lastDailyReward !== 'number') userData.lastDailyReward = 0;
+            if (typeof userData.invitedCount !== 'number') userData.invitedCount = 0;
+            if (!userData.rewards) userData.rewards = {};
+            if (typeof userData.startedMiningCount !== 'number') userData.startedMiningCount = 0;
+            if (!Array.isArray(userData.purchasedSpeeds)) userData.purchasedSpeeds = [5];
+        } else {
+             messageEl.style.color = '#ff0057';
+             messageEl.innerText = "Kullanıcı verisi bulunamadı. Lütfen tekrar giriş yapın.";
+        }
+    } catch(e) {
+        messageEl.style.color = '#ff0057';
+        messageEl.innerText = `Veri yükleme hatası: ${e.message}`;
+        console.error("Veri Yükleme Hatası:", e);
+    }
+}
+
+// =========================================================================
+// --- ARABİRİM (UI) YENİLEME ---
+// =========================================================================
+
+function renderRewards() {
+    if (!userData) return;
+
+    // Davet Alanını Güncelle
+    // Davet kodu UID'nin ilk 8 hanesidir.
+    const refCode = currentUser.uid.substring(0, 8);
+    refCodeEl.innerText = refCode;
+    invitedCountEl.innerText = userData.invitedCount;
+    const totalReward = parseFloat((userData.invitedCount * REFERRAL_REWARD_AMOUNT).toFixed(2));
+    totalRefRewardEl.innerText = `${totalReward.toFixed(2)} USDT`;
+    
+    // Görevleri Kontrol Et ve Butonları Bağla
+    checkDailyRewardStatus();
+    checkSocialMediaReward('twitter', 'twitterFollowReward', 'twitterFollowBtn');
+    checkSocialMediaReward('telegram', 'telegramJoinReward', 'telegramJoinBtn');
+    checkMiningCountReward();
+    checkSpeedBuyReward();
+
+    // Event Listener'lar
+    document.getElementById('dailyCollectBtn').onclick = () => collectReward('daily');
+    document.getElementById('twitterFollowBtn').onclick = (e) => handleSocialMediaClick(e, 'twitter');
+    document.getElementById('telegramJoinBtn').onclick = (e) => handleSocialMediaClick(e, 'telegram');
+    document.getElementById('miningStartBtn').onclick = () => collectReward('mining');
+    document.getElementById('speedBuyBtn').onclick = () => {
+        const btn = document.getElementById('speedBuyBtn');
+        if (btn.innerText === 'Satın Al') {
+            window.location.href = "hizal.html"; // hıza yönlendir
+        } else if (btn.innerText === 'Ödülü Topla') {
+            collectReward('speed');
+        }
+    };
+    
+    messageEl.style.color = '#4cd964';
+    messageEl.innerText = "Görev durumları güncellendi.";
+}
+
+
+// =========================================================================
+// --- GÖREV KONTROL FONKSİYONLARI ---
+// =========================================================================
+
+function updateRewardUI(id, isCompleted, isReady, buttonText) {
+    const item = document.getElementById(id);
+    const btn = item.querySelector('.collect-btn');
+    
+    // Temizlik
+    item.classList.remove('completed-reward', 'ready-to-collect');
+    btn.classList.remove('disabled-action');
+    btn.disabled = false;
+    btn.style.backgroundColor = ''; // CSS'in belirlemesini sağla
+    btn.style.color = '';
+
+    if (isCompleted) {
+        item.classList.add('completed-reward');
+        btn.innerText = 'Toplandı';
+        btn.disabled = true;
+    } else if (isReady) {
+        item.classList.add('ready-to-collect');
+        btn.innerText = buttonText || 'Ödülü Topla';
+    } else {
+        btn.classList.add('disabled-action');
+        btn.innerText = buttonText || 'Gereksinim Karşılanmadı';
+        btn.disabled = true;
+    }
+}
+
+function checkDailyRewardStatus() {
+    const now = Date.now();
+    const collectedKey = 'collectedDaily'; // Günlük girişin de bir kez toplandı bayrağı olabilir
+    const canCollect = (now - (userData.lastDailyReward || 0)) > REWARDS.daily.timeLimit;
+    
+    if (userData.rewards[collectedKey] && !canCollect) {
+        // Eğer bir kez toplandıysa ve 24 saat geçmediyse (burası opsiyonel, sürekli tekrar eden görevler için collectedKey kullanılmaz)
+        // Ancak bu örnekte kalsın
+    }
+    
+    if (canCollect) {
+        updateRewardUI('dailyRewardItem', false, true, 'Topla');
+    } else {
+        const remainingTimeMs = REWARDS.daily.timeLimit - (now - userData.lastDailyReward);
+        const hours = Math.floor(remainingTimeMs / (1000 * 60 * 60));
+        const minutes = Math.floor((remainingTimeMs % (1000 * 60 * 60)) / (1000 * 60));
+        updateRewardUI('dailyRewardItem', false, false, `Bekle: ${hours}s ${minutes}d`);
+    }
+}
+
+function checkSocialMediaReward(type, itemId, btnId) {
+    const reward = REWARDS[type];
+    const isCollected = userData.rewards[reward.collectedKey];
+    const isClaimedFlag = `claimed${type.charAt(0).toUpperCase() + type.slice(1)}`;
+    const isClaimed = userData.rewards[isClaimedFlag]; // Kullanıcının linke gittiği bayrağı
+
+    if (isCollected) {
+         updateRewardUI(itemId, true, false);
+    } else if (isClaimed) {
+         // Kullanıcı sosyal medya linkine tıklamış ve toplama hakkı kazanmışsa
+         updateRewardUI(itemId, false, true, 'Ödülü Topla');
+    } else {
+         // Varsayılan: Linke git ve toplama hakkı kazan
+         updateRewardUI(itemId, false, false, 'Hesaba Git');
+         document.getElementById(btnId).classList.remove('disabled-action');
+         document.getElementById(btnId).disabled = false;
+         document.getElementById(btnId).style.backgroundColor = '#00bfff';
+    }
+}
+
+async function handleSocialMediaClick(e, type) {
+    const reward = REWARDS[type];
+    const isCollected = userData.rewards[reward.collectedKey];
+    const isClaimedFlag = `claimed${type.charAt(0).toUpperCase() + type.slice(1)}`;
+    const isClaimed = userData.rewards[isClaimedFlag];
+    
+    if (isCollected) return;
+
+    if (isClaimed) {
+        // Butonun görevi 'Ödülü Topla' ise, toplama fonksiyonunu çağır
+        collectReward(type);
+    } else {
+        // Butonun görevi 'Hesaba Git' ise
+        
+        // 1. Dış linki aç
+        window.open(reward.actionURL, '_blank');
+        
+        // 2. Simülasyon: Kullanıcının linke gittiğini ve görevin hazır hale geldiğini kaydet
+        // (GERÇEK UYGULAMADA BUNU OTOMATİK DEĞİL, UYGUN BİR DOĞRULAMADAN SONRA YAPMALISINIZ!)
+        try {
+             const userDocRef = doc(db, "users", currentUser.uid);
+             
+             // Bu durumu kaydederek butonu 'Ödülü Topla'ya çeviriyoruz
+             await updateDoc(userDocRef, { 
+                [`rewards.${isClaimedFlag}`]: true
+             });
+             userData.rewards[isClaimedFlag] = true;
+             
+             // UI'ı hemen güncelle
+             checkSocialMediaReward(type, type + (type === 'twitter' ? 'FollowReward' : 'JoinReward'), type + (type === 'twitter' ? 'FollowBtn' : 'JoinBtn'));
+             messageEl.style.color = '#f3ba2f';
+             messageEl.innerText = "Sosyal medya sayfanız açıldı. Takip/Katılım sonrası şimdi ödülü toplayabilirsiniz!";
+
+        } catch(e) {
+             messageEl.style.color = '#ff0057';
+             messageEl.innerText = `Sosyal medya görevi kaydı hatası: ${e.message}`;
+        }
+    }
+}
+
+
+function checkMiningCountReward() {
+    const reward = REWARDS.mining;
+    const progress = userData.startedMiningCount || 0;
+    const required = reward.required;
+
+    if (userData.rewards[reward.collectedKey]) {
+        updateRewardUI('firstMiningReward', true, false);
+    } else if (progress >= required) {
+        updateRewardUI('firstMiningReward', false, true, 'Ödülü Topla');
+    } else {
+        updateRewardUI('firstMiningReward', false, false, `Gereksinim: ${progress}/${required}`);
+    }
+}
+
+function checkSpeedBuyReward() {
+    const reward = REWARDS.speed;
+    const hasBoughtSpeed = userData.purchasedSpeeds && userData.purchasedSpeeds.some(speed => speed > 5);
+
+    if (userData.rewards[reward.collectedKey]) {
+        updateRewardUI('firstSpeedBuyReward', true, false);
+    } else if (hasBoughtSpeed) {
+        updateRewardUI('firstSpeedBuyReward', false, true, 'Ödülü Topla');
+    } else {
+        // Satın Alma butonu (manuel olarak ayarlanır)
+        const item = document.getElementById('firstSpeedBuyReward');
+        const btn = item.querySelector('.collect-btn');
+        item.classList.remove('completed-reward', 'ready-to-collect');
+        btn.classList.remove('disabled-action');
+        btn.innerText = 'Satın Al';
+        btn.disabled = false;
+        btn.style.backgroundColor = '#f3ba2f';
+    }
+}
+
+
+// =========================================================================
+// --- ÖDÜL TOPLAMA FONKSİYONU (TRANSACTION KULLANILARAK) ---
+// =========================================================================
+
+async function collectReward(rewardType) {
+    const reward = REWARDS[rewardType];
+    const rewardKey = reward.collectedKey || `collected${rewardType.charAt(0).toUpperCase() + rewardType.slice(1)}`;
+    const userDocRef = doc(db, "users", currentUser.uid);
+
+    // Kilit Kontrolü
+    if (userData.rewards[rewardKey]) {
+        messageEl.style.color = '#ff0057';
+        messageEl.innerText = `${reward.name} ödülü zaten toplandı.`;
+        return;
+    }
+    
+    // İşlem Kontrolleri
+    if (rewardType === 'mining' && (userData.startedMiningCount || 0) < reward.required) {
+        messageEl.style.color = '#ff0057';
+        messageEl.innerText = `Ödülü toplamak için ${reward.required} kez kazım başlatmalısınız.`;
+        return;
+    }
+     if (rewardType === 'speed' && (!userData.purchasedSpeeds || !userData.purchasedSpeeds.some(speed => speed > 5))) {
+        messageEl.style.color = '#ff0057';
+        messageEl.innerText = `Ödülü toplamak için önce bir hız paketi satın almalısınız.`;
+        return;
+    }
+
+    try {
+        messageEl.style.color = '#00bfff';
+        messageEl.innerText = `${reward.name} ödülü işleniyor...`;
+
+        await runTransaction(db, async (transaction) => {
+            const docSnap = await transaction.get(userDocRef);
+            if (!docSnap.exists()) {
+                throw new Error("Kullanıcı dökümanı mevcut değil!");
+            }
+            
+            const currentData = docSnap.data();
+            
+            // Son bir kez daha atomik kontrol
+            if (currentData.rewards && currentData.rewards[rewardKey]) {
+                 throw new Error(`${reward.name} ödülü zaten toplanmış.`);
+            }
+            
+            // USDT bakiyesini artır
+            const updateData = {
+                'mainBalance.USDT': increment(reward.amount), // Firestore'un atomik artırma fonksiyonu kullanıldı
+                [`rewards.${rewardKey}`]: true,
+                // Günlük Giriş için zaman damgasını güncelle
+                ...(rewardType === 'daily' && { lastDailyReward: Date.now() })
+            };
+            
+            transaction.update(userDocRef, updateData);
+        });
+
+        // Başarılı işlem sonrası yerel veriyi ve arayüzü güncelle
+        // NOTE: Gerçek bir Firebase uygulamasında, işlem sonrası bakiyenin 
+        // sunucudan tekrar çekilmesi daha güvenlidir, ancak burada JS'te güncelleyelim.
+        if (userData.mainBalance && userData.mainBalance.USDT !== undefined) {
+             userData.mainBalance.USDT = parseFloat((userData.mainBalance.USDT + reward.amount).toFixed(5));
+        }
+        userData.rewards[rewardKey] = true;
+        if (rewardType === 'daily') userData.lastDailyReward = Date.now();
+
+        messageEl.style.color = '#4cd964';
+        messageEl.innerText = `Tebrikler! ${reward.amount} USDT cüzdanınıza başarıyla eklendi.`;
+
+        renderRewards(); // Arayüzü yenile
+
+    } catch (e) {
+        let errorMsg = e.message || e;
+        if (typeof errorMsg === 'string' && errorMsg.includes("ödülü zaten toplanmış")) {
+             errorMsg = "Bu ödül zaten toplandı.";
+        }
+        messageEl.style.color = '#ff0057';
+        messageEl.innerText = `Ödül toplama başarısız oldu: ${errorMsg}`;
+        console.error("Ödül Toplama Hatası:", e);
+    }
+}
+
+// =========================================================================
+// --- DAVET KODU FONKSİYONLARI ---
+// =========================================================================
+
+window.copyReferralLink = function() {
+    if (!currentUser) {
+        messageEl.style.color = '#ff0057';
+        messageEl.innerText = "Lütfen önce giriş yapın.";
+        return;
+    }
+    
+    // Davet kodu UID'nin ilk 8 hanesidir.
+    const refCode = currentUser.uid.substring(0, 8);
+    const referralLink = REFERRAL_BASE_URL + refCode; 
+    
+    navigator.clipboard.writeText(referralLink).then(() => {
+        messageEl.style.color = '#00bfff';
+        messageEl.innerText = "Davet linki başarıyla kopyalandı! (Kod: " + refCode + ")";
+    }, (err) => {
+        messageEl.style.color = '#ff0057';
+        messageEl.innerText = "Kopyalama başarısız oldu. Lütfen manuel kopyalayın.";
+        console.error("Kopyalama Hatası:", err);
+    });
+}
+</script>
+</body>
+</html>

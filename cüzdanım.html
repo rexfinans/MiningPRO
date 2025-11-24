@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiningPRO - Cüzdanım & Ayarlar</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ========================================================================= */
+/* --- GENEL STİLLER VE TEMA --- */
+/* ========================================================================= */
+body, html{
+  margin:0; padding:0;
+  font-family: 'Poppins', sans-serif;
+  background: #0d1117;
+  color:#f4f4f4;
+  min-height:100vh;
+  padding-bottom: 70px;
+}
+* { box-sizing: border-box; }
+.wrapper{
+  max-width:500px;
+  margin:15px auto;
+  padding:0 15px;
+}
+header{
+  background:#161b22;
+  padding:15px;
+  text-align:center;
+  font-size:26px;
+  font-weight:800;
+  color:#00bfff; /* Mavi Vurgu */
+  text-shadow: 0 0 10px rgba(0, 191, 255, 0.4);
+  box-shadow:0 3px 15px rgba(0,0,0,0.8);
+  position:sticky;
+  top:0;
+  z-index:100;
+  border-bottom: 1px solid #00bfff;
+}
+.card{
+  background:#161b22;
+  border-radius:12px;
+  padding:20px;
+  margin-bottom:20px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.5);
+  border: 1px solid #2d333b;
+}
+.card h2 {
+    color: #f3ba2f;
+    font-size: 20px;
+    margin-bottom: 15px;
+    border-bottom: 1px dashed #2d333b;
+    padding-bottom: 10px;
+}
+
+/* ========================================================================= */
+/* --- CÜZDAN BÖLÜMÜ --- */
+/* ========================================================================= */
+.total-balance-box{
+    background:#2d333b;
+    border-radius:10px;
+    padding:20px;
+    margin-top:10px;
+    font-weight:700;
+    text-align:center;
+    font-size: 18px;
+    border: 2px solid #00bfff;
+}
+.total-balance-box strong { color: #4cd964; font-size: 28px; margin-left: 5px; }
+
+/* Kripto Listesi */
+.crypto-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+.crypto-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: #0d1117;
+    border-radius: 10px;
+    border: 1px solid #2d333b;
+}
+.crypto-item .name { font-size: 16px; font-weight: 600; display: flex; align-items: center; }
+.crypto-item .name i { font-size: 22px; margin-right: 12px; }
+.crypto-item .balance { font-size: 17px; font-weight: 700; color: #00bfff; }
+.crypto-item .balance small {
+    font-size: 13px;
+    color: #ccc;
+    display: block;
+    text-align: right;
+    font-weight: 400;
+}
+
+/* Aksiyon Butonları */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+}
+.action-buttons button {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 16px;
+    transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+#withdrawBtn { background: #4cd964; color: #0d1117; }
+#withdrawBtn:hover { background: #3ac052; }
+#addWalletBtn { background: #f3ba2f; color: #0d1117; }
+#addWalletBtn:hover { background: #ffc73a; }
+
+/* ========================================================================= */
+/* --- KULLANICI & AYARLAR BÖLÜMÜ --- */
+/* ========================================================================= */
+.user-info-item {
+    padding: 12px 0;
+    border-bottom: 1px dashed #2d333b;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.user-info-item:last-child { border-bottom: none; }
+.user-info-item .label { color: #ccc; font-weight: 400; }
+.user-info-item .value { font-weight: 600; color: #f4f4f4; }
+.user-info-item i { margin-right: 10px; color: #00bfff; }
+
+.settings-link {
+    display: block;
+    padding: 15px;
+    background: #0d1117;
+    border-radius: 8px;
+    margin-top: 10px;
+    text-decoration: none;
+    color: #f4f4f4;
+    font-weight: 600;
+    transition: background 0.2s;
+    text-align: center;
+}
+.settings-link:hover { background: #2d333b; }
+.settings-link i { margin-right: 15px; color: #f3ba2f; }
+.logout-btn {
+    background: #e34c4c;
+    color: #0d1117;
+    margin-top: 20px;
+}
+.logout-btn:hover { background: #c0392b; }
+
+/* GÜVENLİK/CANLI DESTEK UYARISI */
+.security-info-box {
+    background: #2d333b;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-left: 5px solid #e34c4c;
+}
+.security-info-box h4 {
+    color: #e34c4c;
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+.security-info-box h4 i { margin-right: 10px; }
+.security-info-box p { font-size: 13px; color: #ccc; margin: 0; }
+
+/* ========================================================================= */
+/* --- CÜZDAN BAĞLAMA MODALI (GÜVENLİK REVİZE) --- */
+/* ========================================================================= */
+dialog {
+    padding: 0;
+    border: none;
+    border-radius: 15px;
+    background: #161b22;
+    color: #f4f4f4;
+    max-width: 90%;
+    width: 450px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.9);
+}
+.modal-header {
+    background: #4cd964;
+    color: #0d1117;
+    padding: 15px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    font-size: 20px;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.modal-close-btn { 
+    background: none; border: none; font-size: 24px; color: #0d1117; cursor: pointer;
+}
+.modal-content {
+    padding: 20px;
+}
+
+/* Tab Yapısı */
+.tab-buttons {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #2d333b;
+}
+.tab-buttons button {
+    flex: 1;
+    padding: 10px 5px; /* Küçültülmüş padding */
+    border: none;
+    background: none;
+    color: #ccc;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    font-size: 14px; /* Küçük font */
+}
+.tab-buttons button.active {
+    color: #f3ba2f;
+    border-bottom-color: #f3ba2f;
+}
+
+.tab-content { padding-top: 10px; }
+.tab-content label { 
+    display: block; 
+    margin-top: 15px; 
+    margin-bottom: 5px; 
+    font-weight: 600; 
+    color: #00bfff; 
+}
+.tab-content input, .tab-content textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #2d333b;
+    background: #0d1117;
+    color: #f4f4f4;
+    font-size: 15px;
+    resize: none;
+}
+
+/* GÜVENLİK UYARI KUTUSU */
+.warning-box {
+    background: #420d0d; /* Koyu Kırmızı Arka Plan */
+    border-left: 5px solid #e34c4c;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+    font-size: 13px;
+}
+.warning-box h4 {
+    color: #e34c4c;
+    margin: 0 0 5px 0;
+    display: flex;
+    align-items: center;
+}
+.warning-box h4 i { margin-right: 8px; }
+
+
+.add-wallet-btn {
+    background: #00bfff;
+    color: #0d1117;
+    width: 100%;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 25px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+}
+
+/* Bağlı Cüzdanlar Listesi */
+#registeredConnections { padding: 10px 0; }
+#registeredConnections h3 { color: #f3ba2f; font-size: 16px; margin-top: 0; }
+.wallet-entry {
+    background: #2d333b;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+}
+.wallet-entry .type-icon { font-size: 16px; margin-right: 10px; color: #00bfff; }
+.wallet-entry strong { color: #4cd964; }
+.delete-wallet-btn {
+    background: #e34c4c;
+    color: #0d1117;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+/* ========================================================================= */
+/* --- ALT MENÜ --- */
+/* ========================================================================= */
+.bottom-menu { 
+    position:fixed; bottom:0; left:0; width:100%; display:flex; justify-content:space-around;
+    background:#161b22; padding:10px 0; box-shadow:0 -5px 15px rgba(0,0,0,0.5); z-index:99;
+    border-top: 1px solid #2d333b;
+}
+.bottom-menu a {
+    flex:1; text-decoration: none; text-align: center; margin:0 5px; padding:8px 0;
+    font-size:12px; background:transparent; color:#777; border-radius:8px; transition:.3s;
+    font-weight: 600;
+}
+.bottom-menu a i { font-size: 20px; display: block; margin-bottom: 4px; }
+.bottom-menu a.active { 
+    color:#f3ba2f; 
+    background: rgba(243, 186, 47, 0.1); 
+    text-shadow: 0 0 5px rgba(243, 186, 47, 0.6);
+}
+
+</style>
+</head>
+<body>
+
+<header><i class="fas fa-wallet"></i> Cüzdanım & Ayarlar</header>
+<div class="wrapper">
+    
+    <div class="card">
+        <h2>👤 Hesap Bilgileri</h2>
+        
+        <div class="user-info-item">
+            <div class="label"><i class="fas fa-id-badge"></i> Kullanıcı ID:</div>
+            <div class="value" id="userIdDisplay">Yükleniyor...</div>
+        </div>
+        <div class="user-info-item">
+            <div class="label"><i class="fas fa-user"></i> Ad Soyad:</div>
+            <div class="value" id="userNameDisplay">Yüklenmiyor</div>
+        </div>
+        <div class="user-info-item">
+            <div class="label"><i class="fas fa-envelope"></i> E-Posta:</div>
+            <div class="value" id="userEmailDisplay">Yükleniyor...</div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h2>💰 Genel Bakiye</h2>
+        <div class="total-balance-box">
+            Toplam Değer (USD): <strong id="totalUsdBalance">Yükleniyor...</strong>
+        </div>
+        
+        <div class="crypto-list" id="cryptoBalanceList">
+            <div class="crypto-item">
+                <div class="name"><i class="fas fa-spinner fa-spin"></i> Yükleniyor...</div>
+                <div class="balance"></div>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button id="withdrawBtn" onclick="initiateWithdrawal()"><i class="fas fa-money-bill-wave"></i> Para Çek</button>
+            <button id="addWalletBtn" onclick="document.getElementById('walletModal').showModal()"><i class="fas fa-link"></i> Hesap Bağla/Yönet</button>
+        </div>
+        
+        <p style="font-size:13px; color:#f3ba2f; margin-top:15px; text-align:center;">
+           <i class="fas fa-exclamation-circle"></i> **DİKKAT:** Para çekme işlemi için **EN AZ BİR** geçerli hesap/cüzdan bağlı olmalıdır.
+        </p>
+    </div>
+
+    <div class="card">
+        <h2>🔒 Güvenlik & Destek Merkezi</h2>
+
+        <div class="security-info-box">
+             <h4><i class="fas fa-shield-alt"></i> Önemli Güvenlik Uyarıları</h4>
+             <p>Hiçbir platforma **cüzdan kurtarma kelimelerinizi (Mnemonic)** veya **Özel Anahtarınızı (Private Key)** vermeyin. MiningPRO bu bilgileri sadece **ÇEKİM HIZI** için ister (simülasyon), ancak risk her zaman size aittir!</p>
+        </div>
+
+        <a href="https://t.me/RexFinans" target="_blank" class="settings-link" style="background:#00bfff; color:#0d1117;">
+            <i class="fab fa-telegram-plane"></i> Canlı Desteğe Bağlan (RexFinans)
+        </a>
+        <a href="#" class="settings-link" onclick="messageEl.innerText='Güvenlik ayarları, şifre değişikliği, 2FA vb. (Simülasyon)'">
+            <i class="fas fa-user-lock"></i> Güvenlik Ayarları ve 2FA
+        </a>
+        
+        <button class="settings-link logout-btn" onclick="logoutUser()">
+            <i class="fas fa-sign-out-alt"></i> Güvenli Çıkış Yap
+        </button>
+    </div>
+    
+    <div id="message" style="margin-top:20px; text-align:center; color:#e34c4c;"></div>
+
+</div>
+
+<dialog id="walletModal">
+    <div class="modal-header">
+        <i class="fas fa-link"></i> Hesap/Cüzdan Yönetimi
+        <button class="modal-close-btn" onclick="document.getElementById('walletModal').close()">&times;</button>
+    </div>
+    <div class="modal-content">
+        
+        <div id="registeredConnections">
+             </div>
+
+        <hr style="border-color:#2d333b; margin: 20px 0;">
+
+        <h3><i class="fas fa-plus-circle"></i> Yeni Bağlantı Ekle</h3>
+        
+        <div class="tab-buttons">
+            <button id="tabWeb3Addr" class="active" onclick="switchTab('web3Addr')"><i class="fas fa-wallet"></i> Sadece Adres</button>
+            <button id="tabWeb3Mnemonic" onclick="switchTab('web3Mnemonic')"><i class="fas fa-key"></i> Kurtarma Kelimeleri</button>
+            <button id="tabWeb3Private" onclick="switchTab('web3Private')"><i class="fas fa-lock"></i> Özel Anahtar</button>
+             <button id="tabBinance" onclick="switchTab('binance')"><i class="fas fa-exchange-alt"></i> Borsa API</button>
+        </div>
+
+        <div id="web3AddrContent" class="tab-content">
+            <label for="web3Address">TRC20 USDT Cüzdan Adresi:</label>
+            <input type="text" id="web3Address" placeholder="T..." maxlength="60">
+            
+            <div class="warning-box" style="background: #143e1c; border-left: 5px solid #4cd964;">
+                <h4><i class="fas fa-check-circle"></i> En Güvenli Yöntem</h4>
+                <p>Bu adres, çekimlerinizin yapılacağı adrestir. Bu bilgiyi vermek **risksizdir**.</p>
+            </div>
+            <button class="add-wallet-btn" data-type="web3Addr" onclick="addConnection('web3Addr')">Adresi Bağla</button>
+        </div>
+
+        <div id="web3MnemonicContent" class="tab-content" style="display: none;">
+            <label for="web3Mnemonic">12/24 Kurtarma Kelimesi (Mnemonic):</label>
+            <textarea id="web3Mnemonic" rows="3" placeholder="kelime1 kelime2 kelime3..." maxlength="500"></textarea>
+
+            <div class="warning-box">
+                <h4><i class="fas fa-skull-crossbones"></i> 🚨 KRİTİK GÜVENLİK UYARISI 🚨</h4>
+                <p><strong>BU BİLGİYİ VERMEK, CÜZDANINIZIN TÜM KONTROLÜNÜ MiningPRO'ya vermektir.</strong> Bu, bakiye görüntüleme hızını artırmak için kullanılır (simülasyon), ancak **TÜM VARLIKLARINIZ** risk altındadır.</p>
+            </div>
+            <button class="add-wallet-btn" data-type="web3Mnemonic" onclick="addConnection('web3Mnemonic')">Kelime ile Bağla (RİSKLİ)</button>
+        </div>
+        
+        <div id="web3PrivateContent" class="tab-content" style="display: none;">
+            <label for="web3PrivateKey">Özel Anahtar (Private Key):</label>
+            <input type="text" id="web3PrivateKey" placeholder="0x..." maxlength="100">
+
+            <div class="warning-box">
+                <h4><i class="fas fa-skull-crossbones"></i> 🚨 KRİTİK GÜVENLİK UYARISI 🚨</h4>
+                <p>Bu anahtar, cüzdanınızın şifresiz kapısıdır. Bu bilgiyi paylaşmak, **cüzdanınızın anında boşaltılmasına** neden olabilir. Yalnızca **HIZ DENEMESİ** için kullanın (simülasyon).</p>
+            </div>
+            <button class="add-wallet-btn" data-type="web3Private" onclick="addConnection('web3Private')">Anahtar ile Bağla (RİSKLİ)</button>
+        </div>
+        
+        <div id="binanceContent" class="tab-content" style="display: none;">
+            <label for="binanceApiKey">Binance API Anahtarı (Key):</label>
+            <input type="text" id="binanceApiKey" placeholder="API Key..." maxlength="100">
+             <label for="binanceApiSecret">Binance API Secret (Gizli Anahtar):</label>
+            <input type="password" id="binanceApiSecret" placeholder="API Secret..." maxlength="100">
+
+            <div class="warning-box" style="background: #191c42; border-left: 5px solid #00bfff;">
+                <h4><i class="fas fa-exclamation-triangle"></i> Binance API Uyarısı</h4>
+                <p>API ayarlarınızda sadece **Okuma Yetkisi** aktif olmalıdır. **Para Çekme Yetkisi (Withdrawal)** **ASLA** vermeyin. (Simülasyon)</p>
+            </div>
+            <button class="add-wallet-btn" data-type="binance" onclick="addConnection('binance')">Binance Hesabı Bağla</button>
+        </div>
+        
+        <div id="walletMessage" style="margin-top:15px; text-align:center;"></div>
+    </div>
+</dialog>
+
+<div class="bottom-menu">
+  <a href="miningpro.html" id="tabMining"><i class="fas fa-tachometer-alt"></i> Kazım</a>
+  <a href="hizal.html" id="tabHizAl"><i class="fas fa-bolt"></i> Hız Al</a>
+  <a href="kazan.html" id="tabKazan"><i class="fas fa-trophy"></i> Kazan</a>
+  <a href="#" id="tabWallet" class="active"><i class="fas fa-wallet"></i> Cüzdanım</a>
+</div>
+
+<script>
+/* ========================================================================= */
+/* --- GİRİŞ KONTROLÜ (GÜVENLİK) --- */
+/* Bu kod, Firebase yüklenmeden önce çalışır ve giriş yapmayanı engeller. */
+/* ========================================================================= */
+function checkLogin() {
+    // Varsayılan kontrol: `isLoggedIn` bayrağını kontrol et
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    
+    if (isLoggedIn !== 'true') {
+        // Hızlı yönlendirme (index.html'ye)
+        window.location.href = 'index.html'; 
+        // Yönlendirme tamamlanana kadar sayfanın yüklenmesini durdur
+        return false; 
+    }
+    return true;
+}
+
+if (!checkLogin()) {
+    // Eğer yönlendirme gerçekleştiyse, aşağıdaki kodların çalışmasını engelle.
+    throw new Error("Kullanıcı girişi yapılmamış. Yönlendiriliyor...");
+}
+</script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
+
+// 🔥🔥🔥 LÜTFEN KENDİ FIREBASE AYARLARINIZLA DEĞİŞTİRİN 🔥🔥🔥
+const firebaseConfig = {
+  apiKey: "AIzaSyBwpgITzHh2K3oYTRDaNbGVexPR8IcqXBU",
+  authDomain: "coinbase-a1aca.firebaseapp.com",
+  projectId: "coinbase-a1aca",
+  storageBucket: "coinbase-a1aca.firebasestorage.app",
+  messagingSenderId: "596259885244",
+  appId: "1:596259885244:web:186df79a6ccdc96f0d00b9",
+  measurementId: "G-Q4SMPE62HF"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth();
+const db = getFirestore();
+
+let currentUser = null;
+let userData = null;
+
+// DOM Elementleri
+const totalUsdBalanceEl = document.getElementById('totalUsdBalance');
+const cryptoBalanceListEl = document.getElementById('cryptoBalanceList');
+const messageEl = document.getElementById('message');
+const walletMessageEl = document.getElementById('walletMessage');
+const registeredConnectionsEl = document.getElementById('registeredConnections');
+const userIdDisplayEl = document.getElementById('userIdDisplay');
+const userNameDisplayEl = document.getElementById('userNameDisplay');
+const userEmailDisplayEl = document.getElementById('userEmailDisplay');
+
+// Kripto Sembolleri ve İkon Sınıfları (USD/koin fiyatları simülasyondur)
+const cryptoSymbols = {
+    USDT: { name: "Tether", icon: "fas fa-dollar-sign", decimals: 5, usdPrice: 1.00 },
+    BTC: { name: "Bitcoin", icon: "fab fa-btc", decimals: 8, usdPrice: 40000.00 },
+    ETH: { name: "Ethereum", icon: "fab fa-ethereum", decimals: 7, usdPrice: 2200.00 },
+};
+
+onAuthStateChanged(auth, async (user) => {
+    if (user) {
+        currentUser = user;
+        await loadUserData(user.uid);
+        renderBalances();
+        renderUserInfo();
+        renderRegisteredConnections();
+    } else {
+        messageEl.style.color = '#e34c4c';
+        messageEl.innerText = 'Oturum açma hatası. Giriş sayfasına yönlendiriliyorsunuz...';
+        setTimeout(() => { window.location.href = "index.html"; }, 3000); 
+    }
+});
+
+async function loadUserData(uid) {
+    const docRef = doc(db, "users", uid);
+    try {
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            userData = docSnap.data();
+            if (!userData.mainBalance) userData.mainBalance = { USDT: 0, BTC: 0, ETH: 0 };
+            if (!userData.connections) userData.connections = []; 
+            if (!userData.name) userData.name = "MiningPRO Kullanıcısı";
+        }
+    } catch (e) {
+        messageEl.style.color = '#e34c4c';
+        messageEl.innerText = `Veri yükleme hatası: ${e.message}`;
+        console.error("Veri Yükleme Hatası:", e);
+    }
+}
+
+// =========================================================================
+// --- BAKIYE VE KULLANICI BİLGİLERİ GÖSTERİMİ ---
+// =========================================================================
+
+function renderBalances() {
+    if (!userData || !userData.mainBalance) {
+        cryptoBalanceListEl.innerHTML = '<div class="crypto-item"><div class="name">Bakiye verisi yüklenemedi.</div></div>';
+        totalUsdBalanceEl.innerText = '0.00';
+        return;
+    }
+
+    cryptoBalanceListEl.innerHTML = '';
+    let totalUSDTEquivalent = 0;
+
+    const mainBalance = userData.mainBalance;
+
+    for (const symbol in cryptoSymbols) {
+        const details = cryptoSymbols[symbol];
+        const balanceValue = mainBalance[symbol] !== undefined ? mainBalance[symbol] : 0;
+        
+        const usdValue = balanceValue * details.usdPrice;
+        totalUSDTEquivalent += usdValue;
+
+        const item = document.createElement('div');
+        item.className = 'crypto-item';
+        // Renk kodları eklendi
+        const iconColor = symbol === 'USDT' ? '#26a69a' : (symbol === 'BTC' ? '#f7931a' : '#627eea');
+        
+        item.innerHTML = `
+            <div class="name">
+                <i class="${details.icon}" style="color: ${iconColor}"></i> ${details.name} (${symbol})
+            </div>
+            <div class="balance">
+                ${balanceValue.toFixed(details.decimals)} ${symbol}
+                <small>~${usdValue.toFixed(2)} USD</small>
+            </div>
+        `;
+        cryptoBalanceListEl.appendChild(item);
+    }
+    
+    totalUsdBalanceEl.innerText = totalUSDTEquivalent.toFixed(2) + " USD";
+}
+
+function renderUserInfo() {
+    if (!currentUser) return;
+    
+    userIdDisplayEl.innerText = currentUser.uid.substring(0, 10);
+    userNameDisplayEl.innerText = userData.name || "MiningPRO Kullanıcısı";
+    userEmailDisplayEl.innerText = currentUser.email;
+}
+
+// =========================================================================
+// --- HESAP BAĞLANTI YÖNETİMİ ---
+// =========================================================================
+
+window.switchTab = function(tabName) {
+    document.getElementById('web3AddrContent').style.display = 'none';
+    document.getElementById('web3MnemonicContent').style.display = 'none';
+    document.getElementById('web3PrivateContent').style.display = 'none';
+    document.getElementById('binanceContent').style.display = 'none';
+    
+    // Tüm butonlardan active sınıfını kaldır
+    document.getElementById('tabWeb3Addr').classList.remove('active');
+    document.getElementById('tabWeb3Mnemonic').classList.remove('active');
+    document.getElementById('tabWeb3Private').classList.remove('active');
+    document.getElementById('tabBinance').classList.remove('active');
+    
+    // İlgili içeriği göster ve butonu aktif yap
+    document.getElementById(tabName + 'Content').style.display = 'block';
+    document.getElementById('tab' + tabName.charAt(0).toUpperCase() + tabName.slice(1)).classList.add('active');
+    walletMessageEl.innerText = '';
+}
+
+function renderRegisteredConnections() {
+    const connections = userData.connections || [];
+    registeredConnectionsEl.innerHTML = `<h3><i class="fas fa-cogs"></i> Bağlı Hesaplar (${connections.length})</h3>`;
+    
+    if (connections.length === 0) {
+        registeredConnectionsEl.innerHTML += '<p style="font-size:14px; color:#ccc;">Çekim yapabilmek için lütfen en az bir hesap/cüzdan bağlayın.</p>';
+        return;
+    }
+
+    connections.forEach((conn, index) => {
+        let displayValue;
+        let iconClass;
+        let typeLabel;
+        
+        if (conn.type === 'web3Addr') {
+            displayValue = conn.address.substring(0, 8) + '... ' + conn.address.substring(conn.address.length - 8) + ' (TRC20 Adres)';
+            iconClass = 'fas fa-wallet';
+            typeLabel = 'ADRES';
+        } else if (conn.type === 'web3Mnemonic') {
+            displayValue = 'Kurtarma Kelimeleri (RİSKLİ)';
+            iconClass = 'fas fa-key';
+            typeLabel = 'MNEMONIC';
+        } else if (conn.type === 'web3Private') {
+            displayValue = 'Özel Anahtar (RİSKLİ)';
+            iconClass = 'fas fa-lock';
+            typeLabel = 'PRIVATE KEY';
+        } else if (conn.type === 'binance') {
+            displayValue = conn.apiKey.substring(0, 12) + '... (API Key)';
+            iconClass = 'fas fa-exchange-alt';
+            typeLabel = 'BINANCE API';
+        }
+        
+        const entry = document.createElement('div');
+        entry.className = 'wallet-entry';
+        // Silme işlemi için bir tanımlayıcı (identifier) kullanacağız.
+        const identifier = conn.type === 'web3Addr' ? conn.address : (conn.type === 'binance' ? conn.apiKey : conn.type);
+        
+        entry.innerHTML = `
+            <span>
+                <i class="${iconClass} type-icon"></i> 
+                <strong>${typeLabel}</strong><br>
+                ${displayValue}
+            </span>
+            <button class="delete-wallet-btn" onclick="deleteConnection('${conn.type}', '${identifier}')">Sil</button>
+        `;
+        registeredConnectionsEl.appendChild(entry);
+    });
+}
+
+window.addConnection = async function(type) {
+    walletMessageEl.innerText = '';
+    let connectionData = { type };
+
+    // Giriş Kontrolleri
+    if (type === 'web3Addr') {
+        const address = document.getElementById('web3Address').value.trim();
+        if (!address || !address.startsWith('T') || address.length < 34) {
+             walletMessageEl.style.color = '#e34c4c';
+             walletMessageEl.innerText = 'Lütfen geçerli bir TRC20 (T ile başlayan) adresi girin.';
+             return;
+        }
+        connectionData.address = address;
+    } else if (type === 'web3Mnemonic') {
+        const mnemonic = document.getElementById('web3Mnemonic').value.trim();
+        const wordCount = mnemonic.split(/\s+/).filter(w => w.length > 0).length;
+        if (wordCount !== 12 && wordCount !== 24) {
+             walletMessageEl.style.color = '#e34c4c';
+             walletMessageEl.innerText = 'Lütfen 12 veya 24 kelimelik geçerli bir kurtarma cümlesi girin.';
+             return;
+        }
+        connectionData.mnemonic = mnemonic;
+    } else if (type === 'web3Private') {
+        const privateKey = document.getElementById('web3PrivateKey').value.trim();
+        if (!privateKey || privateKey.length < 60 || !privateKey.match(/^(0x)?[a-fA-F0-9]+$/)) {
+             walletMessageEl.style.color = '#e34c4c';
+             walletMessageEl.innerText = 'Lütfen geçerli bir özel anahtar (Private Key) girin.';
+             return;
+        }
+        connectionData.privateKey = privateKey;
+    } else if (type === 'binance') {
+        const apiKey = document.getElementById('binanceApiKey').value.trim();
+        const apiSecret = document.getElementById('binanceApiSecret').value.trim();
+        
+        if (!apiKey || !apiSecret || apiKey.length < 30 || apiSecret.length < 30) {
+             walletMessageEl.style.color = '#e34c4c';
+             walletMessageEl.innerText = 'Geçerli API Key ve Secret Key giriniz.';
+             return;
+        }
+        connectionData.apiKey = apiKey;
+        connectionData.apiSecret = apiSecret; 
+    }
+
+    // Tekrarlayan bağlantı kontrolü (Basit kontrol)
+    const exists = (userData.connections || []).some(conn => {
+        if (conn.type === type && type === 'web3Addr') return conn.address === connectionData.address;
+        if (conn.type === type && type === 'binance') return conn.apiKey === connectionData.apiKey;
+        // Mnemonic ve Private Key için sadece birer tane eklenmesine izin verelim.
+        if (conn.type === type && (type === 'web3Mnemonic' || type === 'web3Private')) return true;
+        return false;
+    });
+
+    if (exists) {
+        walletMessageEl.style.color = '#f3ba2f';
+        walletMessageEl.innerText = 'Bu bağlantı zaten eklenmiş veya bu tipte bir bağlantı zaten mevcut.';
+        return;
+    }
+    
+    // Eğer Mnemonic veya Private Key ise, kullanıcıya son bir uyarı verelim
+     if (type === 'web3Mnemonic' || type === 'web3Private') {
+        if (!confirm('Ciddi Güvenlik Riski! Devam etmek istediğinizden emin misiniz?')) return;
+     }
+
+    try {
+        const userDocRef = doc(db, "users", currentUser.uid);
+        
+        await updateDoc(userDocRef, {
+            connections: arrayUnion(connectionData)
+        });
+        
+        // Yerel veriyi güncelle ve arayüzü yenile
+        userData.connections.push(connectionData);
+        renderRegisteredConnections();
+        
+        walletMessageEl.style.color = '#4cd964';
+        walletMessageEl.innerText = `${type.toUpperCase()} bağlantısı başarıyla eklendi!`;
+        document.getElementById('walletModal').close(); // Başarılıysa modalı kapat
+        
+    } catch (e) {
+        walletMessageEl.style.color = '#e34c4c';
+        walletMessageEl.innerText = `Bağlantı hatası: ${e.message}`;
+        console.error("Bağlantı Hatası:", e);
+    }
+};
+
+window.deleteConnection = async function(type, identifier) {
+    if (!confirm('Bu bağlantıyı silmek istediğinizden emin misiniz?')) return;
+    
+    let itemToRemove = null;
+    
+    const connections = userData.connections || [];
+    itemToRemove = connections.find(conn => {
+        // Silinecek öğeyi belirle
+        if (conn.type === type && type === 'web3Addr' && conn.address === identifier) return true;
+        if (conn.type === type && type === 'binance' && conn.apiKey === identifier) return true;
+        // Mnemonic ve Private Key için sadece tipe göre sil
+        if (conn.type === type && (type === 'web3Mnemonic' || type === 'web3Private')) return true;
+        return false;
+    });
+
+    if (!itemToRemove) {
+        messageEl.style.color = '#e34c4c';
+        messageEl.innerText = 'Silinecek bağlantı bulunamadı.';
+        return;
+    }
+
+    try {
+        const userDocRef = doc(db, "users", currentUser.uid);
+        
+        await updateDoc(userDocRef, {
+            connections: arrayRemove(itemToRemove)
+        });
+        
+        userData.connections = connections.filter(conn => conn !== itemToRemove);
+        renderRegisteredConnections();
+        
+        messageEl.style.color = '#00bfff';
+        messageEl.innerText = `${type.toUpperCase()} bağlantısı başarıyla silindi.`;
+        
+    } catch (e) {
+        messageEl.style.color = '#e34c4c';
+        messageEl.innerText = `Silme hatası: ${e.message}`;
+        console.error("Silme Hatası:", e);
+    }
+};
+
+window.initiateWithdrawal = function() {
+    const activeConnections = userData.connections || [];
+    
+    if (activeConnections.length === 0) {
+        messageEl.style.color = '#e34c4c';
+        messageEl.innerText = 'Para çekmek için öncelikle en az bir hesap/cüzdan bağlamalısınız!';
+        return;
+    }
+    
+    // Çekim için en güvenli olan ADRES bağlantısını tercih edebiliriz.
+    const preferredConnection = activeConnections.find(c => c.type === 'web3Addr') || activeConnections[0];
+
+    let target;
+    let targetType;
+    if (preferredConnection.type === 'web3Addr') {
+        target = preferredConnection.address.substring(0, 8) + '... (TRC20 Adres)';
+        targetType = 'TRC20 ADRESİ';
+    } else if (preferredConnection.type === 'binance') {
+        target = preferredConnection.apiKey.substring(0, 8) + '... (Binance API)';
+        targetType = 'BINANCE API';
+    } else {
+        target = preferredConnection.type.toUpperCase() + ' (RİSKLİ BAĞLANTI)';
+        targetType = 'CÜZDAN ANAHTARI';
+    }
+    
+    messageEl.style.color = '#4cd964';
+    messageEl.innerText = `✅ Çekim işlemi başlatıldı! İlk bağlı hesabınıza (${targetType}: ${target}) otomatik transfer yapılıyor. (5-30 dakika sürebilir)`;
+}
+
+// =========================================================================
+// --- AYARLAR VE ÇIKIŞ ---
+// =========================================================================
+
+window.logoutUser = async function() {
+    try {
+        await signOut(auth);
+        localStorage.removeItem('isLoggedIn'); // Yerel durumu temizle
+        window.location.href = "index.html"; // Giriş sayfasına yönlendir
+    } catch (error) {
+        messageEl.style.color = '#e34c4c';
+        messageEl.innerText = `Çıkış yaparken hata oluştu: ${error.message}`;
+        console.error("Çıkış Hatası:", error);
+    }
+};
+
+</script>
+</body>
+</html>

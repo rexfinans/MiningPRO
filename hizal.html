@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiningPRO - Hız Satın Al</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ========================================================================= */
+/* --- GENEL STİLLER VE TEMA --- */
+/* ========================================================================= */
+body, html {
+  margin: 0; padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #0D1117; /* GitHub Dark Mode Background */
+  color: #E6EDF3; /* Açık Gri Metin */
+  min-height: 100vh;
+  padding-bottom: 70px;
+  line-height: 1.6;
+}
+.wrapper {
+  max-width: 550px; /* Biraz genişletildi */
+  margin: 15px auto;
+  padding: 0 15px;
+}
+header {
+  background: #161B22;
+  padding: 15px;
+  text-align: center;
+  font-size: 26px;
+  font-weight: 800;
+  color: #00BFFF;
+  text-shadow: 0 0 10px rgba(0, 191, 255, 0.6); /* Daha güçlü neon efekti */
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.8);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid #00BFFF;
+}
+header i { margin-right: 10px; }
+
+/* ========================================================================= */
+/* --- KARTLAR VE BİLGİ ALANLARI --- */
+/* ========================================================================= */
+.card {
+  background: #161B22;
+  border-radius: 16px; /* Daha yuvarlak köşeler */
+  padding: 25px;
+  margin-bottom: 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6); /* Derin gölge */
+  border: 1px solid #2D333B;
+  transition: transform 0.3s ease;
+}
+.card:hover {
+    transform: translateY(-2px);
+}
+.card h2 {
+    color: #F3BA2F; /* Altın Rengi */
+    font-size: 22px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #2D333B;
+    padding-bottom: 10px;
+    font-weight: 700;
+}
+.status-info {
+    text-align: center;
+    font-size: 14px;
+    color: #CCC;
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    background: #2D333B;
+    border-left: 5px solid #00BFFF;
+}
+
+/* --- HIZ ÖLÇER GÖRSELİ --- */
+.speed-meter-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
+}
+.speed-indicator {
+    width: 120px;
+    height: 60px;
+    border-radius: 60px 60px 0 0;
+    background: linear-gradient(to right, #4cd964 50%, #f3ba2f 75%, #ff0057 100%);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 15px;
+    border: 3px solid #0d1117;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+.current-speed-pin {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    border-radius: 50%;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    box-shadow: 0 0 10px rgba(255,255,255,0.8);
+    transition: left 0.8s ease-out, background 0.8s; /* İğne hareketi için animasyon eklendi */
+}
+.current-speed-text {
+    font-size: 30px;
+    font-weight: 800;
+    color: #4cd964;
+    text-shadow: 0 0 10px rgba(76, 217, 100, 0.8);
+    transition: color 0.8s, text-shadow 0.8s; /* Hız metni için animasyon eklendi */
+}
+
+
+/* ========================================================================= */
+/* --- HIZ PAKETLERİ VE LİSTELEME --- */
+/* ========================================================================= */
+.package-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.package-item {
+    background: #1F2A35;
+    padding: 20px;
+    border-radius: 12px;
+    border: 2px solid transparent; 
+    box-shadow: 0 8px 15px rgba(0,0,0,0.6);
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.package-item:hover {
+    transform: scale(1.02); /* Hafif büyütme */
+    box-shadow: 0 12px 25px rgba(0,0,0,0.8);
+}
+
+/* Paket Renkleri - Neon Sınırlar ve Gölge */
+.package-item[data-duration="10"] { 
+    border-color: #4CD964; 
+    box-shadow: 0 0 15px rgba(76, 217, 100, 0.4), 0 8px 15px rgba(0,0,0,0.6);
+}
+.package-item[data-duration="20"] { 
+    border-color: #00BFFF; 
+    box-shadow: 0 0 15px rgba(0, 191, 255, 0.4), 0 8px 15px rgba(0,0,0,0.6);
+}
+.package-item[data-duration="30"] { 
+    border-color: #F3BA2F; 
+    box-shadow: 0 0 15px rgba(243, 186, 47, 0.4), 0 8px 15px rgba(0,0,0,0.6);
+}
+.package-item[data-duration="60"] { 
+    border-color: #FF0057; 
+    box-shadow: 0 0 15px rgba(255, 0, 87, 0.4), 0 8px 15px rgba(0,0,0,0.6);
+}
+
+.package-item h3 {
+    margin: 0 0 5px 0;
+    color: #E6EDF3;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    font-weight: 800;
+}
+.package-item h3 i { margin-right: 10px; color: #F3BA2F; }
+
+.package-item p {
+    margin: 5px 0;
+    font-size: 15px;
+    color: #A0AEC0; /* Daha yumuşak gri */
+}
+.package-item .details {
+    margin: 15px 0;
+    padding: 10px 0;
+    border-top: 1px dashed #2D333B;
+    border-bottom: 1px dashed #2D333B;
+    font-size: 14px;
+    color: #999;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+.package-item .details span {
+    display: flex;
+    align-items: center;
+}
+.package-item .details span i {
+    margin-right: 8px;
+    color: #4CD964;
+}
+
+.package-item .price {
+    font-size: 32px; /* Daha büyük fiyat */
+    font-weight: 800;
+    color: #4CD964;
+    margin: 15px 0;
+    text-shadow: 0 0 15px rgba(76, 217, 100, 0.6);
+}
+.package-item .price span {
+    font-size: 16px;
+    font-weight: 400;
+    color: #A0AEC0;
+    margin-left: 5px;
+}
+.buy-btn {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 18px;
+    background: #F3BA2F; /* Altın butonu */
+    color: #0D1117;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 10px;
+    box-shadow: 0 6px 20px rgba(243, 186, 47, 0.6);
+}
+.buy-btn:hover { 
+    background: #FFE066; 
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(243, 186, 47, 0.8);
+}
+.buy-btn:disabled { 
+    opacity: 0.8; 
+    cursor: not-allowed; 
+    box-shadow: none; 
+    background: #00bfff !important; /* Satın alındı rengi */
+    color: #0d1117 !important;
+}
+
+
+/* ========================================================================= */
+/* --- GÜÇLÜ ÖZELLİK VE REKLAM ALANLARI --- */
+/* ========================================================================= */
+.promo-card {
+    background: #161B22;
+    border: 1px solid #00BFFF;
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 20px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0, 191, 255, 0.4);
+}
+.promo-card h3 {
+    color: #00BFFF;
+    margin-top: 0;
+    font-size: 20px;
+}
+.payment-logos {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 15px;
+}
+.payment-logos i {
+    font-size: 35px;
+    color: #f4f4f4;
+    opacity: 0.8;
+}
+/* Kripto Logoları */
+.payment-logos .crypto-logo {
+    font-size: 35px;
+}
+.payment-logos .bank-logo {
+    color: #00bfff;
+}
+
+
+/* ========================================================================= */
+/* --- ALT MENÜ VE BİLGİLENDİRME --- */
+/* ========================================================================= */
+.info-card h3 { 
+    color: #00BFFF; 
+    border-bottom: 1px solid #2D333B; 
+    padding-bottom: 5px; 
+    margin-top: 0;
+}
+.info-card ul { list-style: none; padding-left: 0; }
+.info-card ul li { 
+    margin-bottom: 12px; 
+    font-size: 14px; 
+    color: #A0AEC0; 
+    display: flex;
+    align-items: flex-start;
+}
+.info-card ul li i { 
+    margin-right: 10px; 
+    color: #F3BA2F; 
+    margin-top: 3px;
+    flex-shrink: 0;
+}
+
+/* ALT MENÜ STİLİ (MiningPRO ile aynı) */
+.bottom-menu { 
+    position:fixed; bottom:0; left:0; width:100%; display:flex; justify-content:space-around;
+    background:#161B22; padding:10px 0; box-shadow:0 -5px 15px rgba(0,0,0,0.5); z-index:99;
+    border-top: 1px solid #2D333B;
+}
+.bottom-menu a {
+    flex:1; text-decoration: none; text-align: center; margin:0 5px; padding:8px 0;
+    font-size:12px; background:transparent; color:#777; border-radius:8px; transition:.3s;
+    font-weight: 600; 
+}
+.bottom-menu a i { font-size: 20px; display: block; margin-bottom: 4px; }
+.bottom-menu a.active { 
+    color:#00BFFF; 
+    background: rgba(0, 191, 255, 0.1); 
+    text-shadow: 0 0 5px rgba(0, 191, 255, 0.6);
+}
+
+
+/* Ekran Üstü Uyarı Sistemi (Floating Alert) */
+/* Burayı koruduk, diğer yerlerde kullanılabilir diye */
+#floatingAlert {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    z-index: 10000;
+    padding: 15px 25px;
+    border-radius: 10px;
+    font-weight: 700;
+    color: #121212;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+    transition: opacity 0.4s, transform 0.4s;
+    opacity: 0;
+    pointer-events: none;
+    max-width: 90%;
+    text-align: center;
+}
+#floatingAlert.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+.alert-success { background: #4cd964; }
+.alert-error { background: #ff0057; }
+.alert-warning { background: #f3ba2f; }
+.alert-info { background: #00bfff; }
+</style>
+</head>
+<body>
+
+<div id="floatingAlert" class="alert-info"></div>
+<header><i class="fas fa-bolt"></i> HIZ MERKEZİ</header>
+<div class="wrapper">
+
+    <div class="card">
+        <h2>ℹ️ Mevcut Kazım Hızı</h2>
+        
+        <div class="speed-meter-container">
+            <div class="speed-indicator">
+                <div class="current-speed-pin"></div>
+            </div>
+            <div class="current-speed-text" id="currentSpeedDisplay">5x</div>
+            <div class="status-info" id="currentSpeedStatus">
+                Mevcut Aktif Hız: <strong>5x</strong> (Temel Seviye). Yeni bir paket satın alarak hızı artırın.
+            </div>
+        </div>
+        
+        <p style="text-align:center; font-size:14px; color:#00BFFF; margin-top:20px;">
+            En yüksek hız paketiniz, tüm kazım süreniz boyunca geçerliliğini korur.
+        </p>
+    </div>
+
+    <div class="card">
+        <h2>🚀 Yükseltilebilir Hız Paketleri</h2>
+        
+        <div class="package-list">
+            
+            <div class="package-item" data-speed="7" data-price="25" data-duration="10" data-roi="15">
+                <h3><i class="fas fa-fan"></i> YÜKSEK HIZ (7x)</h3>
+                <p>Maksimum kazım hızınızı **10 Gün** boyunca 7 katına çıkarır ve madencilik verimliliğini %15 artırır.</p>
+                <div class="details">
+                    <span><i class="fas fa-clock"></i> Süre: <strong>10 Gün</strong></span>
+                    <span><i class="fas fa-percent"></i> Günlük Getiri: <strong>%1.5</strong></span>
+                    <span><i class="fas fa-chart-line"></i> Tahmini Kar Marjı: <strong>%15</strong></span>
+                    <span><i class="fas fa-wifi"></i> Bağlantı: Gelişmiş Filtre</span>
+                </div>
+                <div class="price">25 USDT <span>(Günlük ~$2.5 USDT Kazanç)</span></div>
+                <button class="buy-btn" onclick="openPaymentPage('Yüksek Hız', 7, 25, 10)">Satın Al & Başlat</button>
+            </div>
+            
+            <div class="package-item" data-speed="10" data-price="45" data-duration="20" data-roi="35">
+                <h3><i class="fas fa-charging-station"></i> TURBO HIZ (10x)</h3>
+                <p>Maksimum kazım hızınızı **20 Gün** boyunca 10 katına çıkarır ve ağdaki işlem önceliğini sağlar.</p>
+                <div class="details">
+                    <span><i class="fas fa-clock"></i> Süre: <strong>20 Gün</strong></span>
+                    <span><i class="fas fa-percent"></i> Günlük Getiri: <strong>%1.75</strong></span>
+                    <span><i class="fas fa-chart-line"></i> Tahmini Kar Marjı: <strong>%35</strong></span>
+                    <span><i class="fas fa-cog"></i> Ek Özellik: Otomatik Transfer</span>
+                </div>
+                <div class="price">45 USDT <span>(Günlük ~$3.15 USDT Kazanç)</span></div>
+                <button class="buy-btn" onclick="openPaymentPage('Turbo Hız', 10, 45, 20)">Satın Al & Başlat</button>
+            </div>
+
+            <div class="package-item" data-speed="15" data-price="75" data-duration="30" data-roi="60">
+                <h3><i class="fas fa-ethernet"></i> ULTRA HIZ (15x)</h3>
+                <p>Maksimum kazım hızınızı **30 Gün** boyunca 15 katına çıkarır. Yüksek frekanslı madencilik için idealdir.</p>
+                <div class="details">
+                    <span><i class="fas fa-clock"></i> Süre: <strong>30 Gün</strong></span>
+                    <span><i class="fas fa-percent"></i> Günlük Getiri: <strong>%2.0</strong></span>
+                    <span><i class="fas fa-chart-line"></i> Tahmini Kar Marjı: <strong>%60</strong></span>
+                    <span><i class="fas fa-star"></i> Öncelikli İşlem Kuyruğu</span>
+                </div>
+                <div class="price">75 USDT <span>(Günlük ~$5.0 USDT Kazanç)</span></div>
+                <button class="buy-btn" onclick="openPaymentPage('Ultra Hız', 15, 75, 30)">Satın Al & Başlat</button>
+            </div>
+
+            <div class="package-item" data-speed="20" data-price="120" data-duration="60" data-roi="180">
+                <h3><i class="fas fa-bolt"></i> MAKSİMUM VIP HIZ (20x)</h3>
+                <p>Maksimum kazım hızınızı **60 Gün** boyunca 20 katına çıkarır ve en yüksek yatırım getirisini sunar.</p>
+                <div class="details">
+                    <span><i class="fas fa-clock"></i> Süre: <strong>60 Gün</strong></span>
+                    <span><i class="fas fa-percent"></i> Günlük Getiri: <strong>%3.0</strong></span>
+                    <span><i class="fas fa-chart-line"></i> Tahmini Kar Marjı: <strong>%180</strong></span>
+                    <span><i class="fas fa-headset"></i> <strong>7/24 VIP Destek</strong></span>
+                </div>
+                <div class="price">120 USDT <span>(Günlük ~$7.2 USDT Kazanç)</span></div>
+                <button class="buy-btn" onclick="openPaymentPage('Maksimum VIP Hız', 20, 120, 60)">Satın Al & Başlat</button>
+            </div>
+        </div>
+        <div id="message" style="margin-top:30px; text-align:center; color:#ff0057; font-weight:700;">Hesap verileri yükleniyor...</div>
+    </div>
+
+    <div class="card info-card">
+        <h2>🔒 Ödeme & Şartlar</h2>
+        <div class="status-info">Ödeme onayı anlık olup, hızınız veritabanınıza hemen işlenir.</div>
+        <h3>Önemli Hususlar</h3>
+        <ul>
+            <li><i class="fas fa-exclamation-triangle"></i> Tüm alımlar iadesizdir. Yatırım yapmadan önce riskleri gözden geçirin.</li>
+            <li><i class="fas fa-money-check-alt"></i> Ödemeler; **Havale/EFT, Kredi/Banka Kartları ve Kripto (USDT, BTC)** ile güvenli şekilde yapılır.</li>
+            <li><i class="fas fa-history"></i> Paket sona erdiğinde, kazım temel **5x** hızıyla otomatik devam eder.</li>
+            <li><i class="fas fa-shield-alt"></i> Tüm işlemleriniz 256-bit SSL şifreleme ve 3D Secure ile korunmaktadır.</li>
+        </ul>
+        </div>
+
+    <div class="promo-card">
+        <h3>⚡ Güvenilir Ödeme Ortakları</h3>
+        <p style="font-size: 14px; color: #A0AEC0;">MiningPRO, uluslararası ve yerel ödeme ağlarını kullanır.</p>
+        <div class="payment-logos">
+            <i class="fab fa-cc-visa" style="color:#1a1f71;"></i>
+            <i class="fab fa-cc-mastercard" style="color:#ff5f00;"></i>
+            <i class="fas fa-university bank-logo"></i>
+            <i class="fab fa-bitcoin crypto-logo" style="color:#f7931a;"></i>
+            <i class="fab fa-ethereum crypto-logo" style="color:#627EEA;"></i>
+        </div>
+    </div>
+</div>
+
+<div class="bottom-menu">
+  <a href="miningpro.html" id="tabMining"><i class="fas fa-tachometer-alt"></i> Kazım</a>
+  <a href="#" id="tabHizAl" class="active"><i class="fas fa-bolt"></i> Hız Al</a>
+  <a href="kazan.html" id="tabKazan"><i class="fas fa-trophy"></i> Kazan</a>
+  <a href="cüzdanım.html" id="tabWallet"><i class="fas fa-wallet"></i> Cüzdanım</a>
+</div>
+
+<script>
+/* ========================================================================= */
+/* --- GİRİŞ KONTROLÜ (GÜVENLİK) --- */
+/* ========================================================================= */
+function checkLogin() {
+    // 'isLoggedIn' bayrağını kontrol et. Giriş sayfanızda bunu 'true' olarak ayarlamalısınız.
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    
+    if (isLoggedIn !== 'true') {
+        // Hızlı yönlendirme (index.html'ye)
+        window.location.href = 'index.html'; 
+        return false; 
+    }
+    return true;
+}
+
+// Sayfa yüklenir yüklenmez kontrolü çalıştır
+if (!checkLogin()) {
+    // Yönlendirme gerçekleştiyse, aşağıdaki kodların çalışmasını engelle.
+    throw new Error("Kullanıcı girişi yapılmamış. Yönlendiriliyor...");
+}
+// Giriş başarılıysa, diğer kodlar buradan devam eder...
+
+
+/* ========================================================================= */
+/* UYARI SİSTEMİ (FLOATING ALERT) */
+/* ========================================================================= */
+let alertTimeout = null;
+function showFloatingAlert(message, type = 'info', duration = 3000) {
+    const alertEl = document.getElementById('floatingAlert');
+    if (!alertEl) return;
+    clearTimeout(alertTimeout);
+    alertEl.className = '';
+    alertEl.classList.add(`alert-${type}`);
+    alertEl.innerText = message;
+    alertEl.classList.add('show');
+    alertTimeout = setTimeout(() => {
+        alertEl.classList.remove('show');
+    }, duration);
+}
+
+/* ========================================================================= */
+/* LOKAL VERİ YÖNETİMİ */
+/* ========================================================================= */
+function getAppState() {
+    const state = localStorage.getItem('miningProState');
+    return state ? JSON.parse(state) : {
+        selectedCrypto: 'USDT', 
+        miningBalance: 0,
+        mainBalance: { USDT: 100.00, BTC: 0.0001, ETH: 0.002 },
+        fanSpeed: 5, // Başlangıç hızı
+        purchasedSpeeds: [],
+    };
+}
+
+/* ========================================================================= */
+/* SATIN ALMA YÖNLENDİRMESİ */
+/* ========================================================================= */
+
+window.openPaymentPage = function(name, speed, price, duration) {
+    const urlParams = new URLSearchParams({
+        name: name,
+        speed: speed,
+        price: price,
+        duration: duration 
+    });
+    
+    // Gerçek yönlendirme satinal.html sayfasına
+    window.location.href = `satinal.html?${urlParams.toString()}`;
+}
+
+
+/* ========================================================================= */
+/* UI GÜNCELLEME VE BAŞLANGIÇ */
+/* ========================================================================= */
+
+// Hız durumu bilgisini günceller
+function updateSpeedStatusDisplay(currentSpeed) {
+    const statusEl = document.getElementById('currentSpeedStatus');
+    const speedDisplayEl = document.getElementById('currentSpeedDisplay');
+    const speedPinEl = document.querySelector('.current-speed-pin');
+    
+    const MIN_SPEED = 5; 
+    const MAX_SPEED = 20; 
+
+    // Hıza göre renk ayarlaması ve metin güncellemesi
+    if (speedDisplayEl) {
+        speedDisplayEl.innerText = `${currentSpeed}x`;
+        let pinColor = '#4cd964'; // Yeşil
+
+        if (currentSpeed >= 15) {
+            pinColor = '#ff0057'; // Kırmızı (Maksimuma yakın)
+            speedDisplayEl.style.color = pinColor;
+            speedDisplayEl.style.textShadow = '0 0 10px rgba(255, 0, 87, 0.8)';
+        } else if (currentSpeed >= 10) {
+            pinColor = '#f3ba2f'; // Sarı
+            speedDisplayEl.style.color = pinColor;
+            speedDisplayEl.style.textShadow = '0 0 10px rgba(243, 186, 47, 0.8)';
+        } else {
+            speedDisplayEl.style.color = pinColor;
+            speedDisplayEl.style.textShadow = '0 0 10px rgba(76, 217, 100, 0.8)';
+        }
+
+        // --- GÖSTERGE İĞNESİ KONUMUNU HESAPLAMA ---
+        // Hız aralığına göre (5x'ten 20x'e) iğnenin sol konumunu (0% - 100%) ayarla.
+        const speedRange = MAX_SPEED - MIN_SPEED; 
+        // currentSpeed'in aralık içindeki oranı
+        const speedRatio = Math.min(1, Math.max(0, (currentSpeed - MIN_SPEED) / speedRange)); 
+        
+        // Pin konumunu % olarak ayarla
+        const pinPosition = speedRatio * 100; 
+
+        if (speedPinEl) {
+            // İğne konumunu ayarla ve rengini eşitle
+            // CSS transition ile hareket yumuşak olacaktır.
+            speedPinEl.style.left = `calc(${pinPosition}% - 5px)`; // 5px iğnenin yarısı kadar sola kaydırma
+            speedPinEl.style.background = pinColor; 
+            speedPinEl.style.boxShadow = `0 0 10px ${pinColor}`;
+        }
+    }
+    
+    // Durum metnini güncelle
+    if (statusEl) {
+         statusEl.innerHTML = `Mevcut Aktif Hız: <strong>${currentSpeed}x</strong>. Yeni bir paket satın alarak hızı artırın.`;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Giriş başarılı ise buraya ulaşılır.
+    
+    // 1. Alt menü aktifliğini ayarlama
+    document.querySelectorAll('.bottom-menu a').forEach(link => {
+        link.classList.remove('active');
+    });
+    document.getElementById('tabHizAl').classList.add('active');
+
+    // 2. Uygulama durumunu yükleme ve mevcut hızı gösterme
+    const appState = getAppState();
+    updateSpeedStatusDisplay(appState.fanSpeed);
+    
+    document.getElementById('message').innerText = "Hesap bilgileri başarıyla yüklendi. Hemen yükseltin!";
+    document.getElementById('message').style.color = "#4cd964";
+    showFloatingAlert("Hız paketleri yüklendi ve hazır.", 'success', 2000);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiningPRO – Geleceğin Bulut Madenciliği</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ========================================================================= */
+/* --- 1. GENEL STİLLER & MERKEZLEME & ANİMASYONLAR --- */
+/* ========================================================================= */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+    background: #060f26;
+    color: #fff;
+    position: relative;
+    text-align: center; 
+    min-height: 100vh;
+}
+
+/* Konteynerler */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Animasyonlar */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Butonlarda Basılma Efektini Kaldırma */
+button, .main-cta-button {
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    outline: none;
+    cursor: pointer;
+    border: none; 
+}
+button:active, .main-cta-button:active {
+    transform: none !important; 
+    box-shadow: none !important;
+}
+
+/* Canvas Animasyonu */
+#cryptoCanvas{
+  position:fixed; top:0; left:0; width:100%; height:100%; z-index:-2; 
+  background:#060f26;
+  opacity:0.25; 
+}
+
+/* ========================================================================= */
+/* --- 2. NAVBAR VE BAŞLIK --- */
+/* ========================================================================= */
+.navbar{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:15px 25px; /* Padding artırıldı */
+  background:rgba(6,15,38,0.9);
+  position:sticky; top:0; z-index:1000;
+  box-shadow:0 4px 15px rgba(0,0,0,0.8); /* Gölge derinleştirildi */
+}
+
+.navbar .logo{
+  font-size:28px; /* Font boyutu artırıldı */
+  font-weight:800; color:#f3ba2f; text-decoration:none;
+  text-shadow:0 0 8px rgba(243,186,47,0.9); /* Gölge güçlendirildi */
+  display: flex; align-items: center;
+}
+.navbar .logo i { margin-right: 10px; font-size: 30px; }
+
+/* Navigasyon Linkleri */
+.navbar nav a{
+    color:#fff; text-decoration:none; margin:0 15px; /* Margin artırıldı */
+    font-weight:600; 
+    position:relative; transition:.3s;
+    font-size: 16px;
+}
+.navbar nav a:hover{color:#ffc73a;} /* Hover rengi değiştirildi */
+
+/* Tek Buton (Giriş / Kayıt Ol) */
+.navbar .single-auth-button {
+    background: #f3ba2f;
+    color: #060f26;
+    padding: 10px 22px; /* Padding artırıldı */
+    font-weight: 700;
+    border-radius: 25px;
+    box-shadow: 0 0 10px rgba(243,186,47,0.7);
+}
+.navbar .single-auth-button:hover{ background:#ffc73a; transform:translateY(-3px); }
+
+
+/* ========================================================================= */
+/* --- 3. HERO VE SECTION GENEL STİLLERİ --- */
+/* ========================================================================= */
+.hero{
+  height:calc(100vh - 60px); /* Navbar yüksekliğine göre ayarlandı */
+  display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:0 15px;
+  animation:fadeIn 2s forwards;
+  position:relative; z-index:1;
+}
+.hero h1{font-size:52px; margin-bottom:20px; font-weight:800; text-shadow:0 0 20px rgba(243,186,47,0.8);} 
+.hero p{font-size:20px; max-width:800px; opacity:0.9; margin-bottom:40px; animation:slideUp 1.5s ease 0.5s forwards; opacity:0;} 
+
+/* "Hemen Kazanmaya Başla" Butonu */
+.hero .main-cta-button {
+    padding: 20px 45px; 
+    font-size: 22px; 
+    font-weight: 800;
+    border-radius: 30px;
+    background: linear-gradient(90deg, #f3ba2f 0%, #ffc73a 100%);
+    color: #060f26;
+    box-shadow: 0 12px 30px rgba(243, 186, 47, 0.7);
+    animation: slideUp 1.5s ease 1s forwards; opacity:0;
+}
+.hero .main-cta-button:hover {
+    transform: translateY(-5px); 
+    box-shadow: 0 30px 60px rgba(243, 186, 47, 0.9);
+}
+
+/* Section Stilleri */
+section {
+    padding: 80px 15px; /* Padding artırıldı */
+    text-align: center;
+}
+.section-title {
+    font-size: 38px; font-weight: 800; margin-bottom: 50px; color: #f3ba2f; 
+    text-shadow: 0 0 8px rgba(243,186,47,0.7);
+}
+
+/* İstatistik Kartları */
+.stat-card {
+    background: #111e38;
+    padding: 25px; /* Padding artırıldı */
+    border-radius: 15px;
+    width: 30%;
+    min-width: 180px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+}
+.stat-card h4 {
+    font-size: 42px;
+    color: #4cd964; /* Yeşil vurgu eklendi */
+    font-weight: 900;
+}
+.stat-card p {
+    font-size: 16px;
+    color: #ccc;
+}
+
+/* Kart Grupları */
+.feature-card, .why-card, .price-card {
+    background:#111e38; 
+    padding: 35px; /* Padding artırıldı */
+    border-radius: 15px;
+    box-shadow: 0 12px 25px rgba(0,0,0,0.6);
+    margin: 15px auto; 
+    width: 90%; 
+    max-width: 380px; /* Maksimum genişlik artırıldı */
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.why-card i { font-size: 40px; color:#f3ba2f; margin-bottom: 15px; } 
+.feature-card span.icon { font-size: 60px; color:#f3ba2f; margin-bottom: 15px; } 
+.feature-card h3, .why-card h3 { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 10px; }
+.feature-card p, .why-card p { color: #ccc; }
+
+.price-cards, .why-cards, .features {
+    display: flex; 
+    justify-content: center; 
+    gap: 30px; /* Boşluk artırıldı */
+    flex-wrap: wrap;
+    max-width: 1100px; 
+    margin: 0 auto;
+}
+.why-card:hover, .feature-card:hover, .price-card:hover {
+    transform: translateY(-10px) scale(1.03); 
+    box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+}
+
+
+/* Fiyat Kartı Detayları */
+.price-card h3 { color: #4cd964; font-size: 28px; margin-bottom: 10px; }
+.price-card .hash-rate { font-size: 44px; font-weight: 900; color: #fff; margin-bottom: 15px; }
+.price-card .hash-rate span { font-size: 20px; font-weight: 400; color: #f3ba2f; }
+.price-card button {
+    margin-top: 20px;
+    background: #f3ba2f;
+    color: #060f26;
+    padding: 12px 25px;
+    border-radius: 10px;
+    font-weight: 800;
+    font-size: 17px;
+}
+.price-card.featured {
+    border: 4px solid #4cd964; /* Öne çıkan kart rengi yeşil yapıldı */
+    transform: scale(1.08);
+    box-shadow: 0 25px 50px rgba(76, 217, 100, 0.5);
+}
+.price-card.featured:hover {
+    transform: translateY(-12px) scale(1.1); 
+}
+
+
+/* ========================================================================= */
+/* --- 4. MODAL (Giriş/Kayıt) STİLLERİ --- */
+/* ========================================================================= */
+.modal{
+    display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+    background:rgba(0,0,0,0.95); /* Koyu Arka Plan */
+    justify-content:center; align-items:center; z-index:9999;
+    backdrop-filter: blur(8px); /* Daha güçlü blur */
+}
+.modal-content{
+    background:#111e38; border-radius:20px; padding:40px; /* Padding artırıldı */
+    width:90%; max-width:450px; /* Genişlik artırıldı */
+    position:relative; animation:modalSlideIn 0.5s ease forwards; 
+    color:#fff; border:2px solid #f3ba2f; /* Çerçeve kalınlaştırıldı */
+    box-shadow: 0 0 40px rgba(243,186,47,0.5);
+}
+
+.close-modal{position:absolute; top:15px; right:20px; font-size:30px; cursor:pointer; color:#f3ba2f;}
+
+.form-switch{text-align:center; margin-bottom:25px; border-bottom: 1px solid #2e446f;}
+.form-switch span{cursor:pointer; margin:0 15px; font-weight:700; font-size:18px; color:#ccc; transition:.3s; padding-bottom: 10px;}
+.form-switch span.active{color:#f3ba2f; border-bottom:3px solid #f3ba2f;}
+
+.modal input{
+    width:100%; padding:12px; margin-bottom:12px; border-radius:10px; border:1px solid #2e446f; 
+    background:#060f26; color:#fff; font-size:16px; transition:.3s;
+}
+.modal input:focus{ outline:none; border-color:#f3ba2f; box-shadow:0 0 10px rgba(243,186,47,0.8);}
+.modal button{
+    width:100%; padding:14px; font-size:18px; font-weight:800; border-radius:12px; 
+    background:#4cd964; /* Yeşil yapıldı */
+    color: #060f26; 
+    margin-top: 10px;
+}
+.modal button:hover{ background:#3ac052; transform:translateY(-2px); }
+
+/* Sözleşme Onay Stili */
+.terms-checkbox {
+    display: flex; align-items: flex-start; margin-bottom: 15px; font-size: 14px;
+    text-align: left;
+    color: #ccc;
+}
+.terms-checkbox input[type="checkbox"] {
+    width: 20px; height: 20px; margin-right: 10px; margin-top: 2px;
+}
+.terms-checkbox label a { color: #f3ba2f; text-decoration: none; font-weight: 700; }
+
+/* Doğrulama Mesajı */
+.message{
+    font-size:15px; 
+    min-height:20px; 
+    margin-top: 10px; 
+    text-align:center; 
+    font-weight:600;
+}
+.message.error { color: #ff5555; }
+.message.success { color: #4cd964; }
+
+/* Davet Kodu Stili */
+#regRefContainer {
+    position: relative;
+    margin-bottom: 12px;
+}
+#regRefContainer label {
+    position: absolute;
+    top: -8px;
+    left: 10px;
+    background: #111e38;
+    padding: 0 5px;
+    font-size: 12px;
+    color: #f3ba2f;
+}
+#regRef {
+    padding-top: 18px !important;
+    padding-bottom: 8px !important;
+}
+#regRef::placeholder {
+    color: #555;
+    font-style: italic;
+}
+
+/* ========================================================================= */
+/* --- 5. RESPONSIVE (Küçük Ekranlar İçin) --- */
+/* ========================================================================= */
+@media(max-width:768px) {
+    .navbar nav { display: none; }
+    .hero h1{font-size:38px;}
+    .hero p{font-size:16px; margin-bottom:30px;}
+    .hero .main-cta-button { font-size: 18px; padding: 16px 32px; }
+    .section-title { font-size: 32px; }
+    .stat-card h4 { font-size: 36px; }
+    .price-card, .why-card, .feature-card { max-width: 100%; }
+    .price-cards, .why-cards, .features { gap: 15px; }
+    .price-card.featured { transform: scale(1.05); }
+    .price-card.featured:hover { transform: translateY(-8px) scale(1.08); }
+    
+    section { padding: 60px 15px; }
+    .navbar { padding: 10px 15px; }
+    .navbar .logo { font-size: 22px; }
+    .navbar .logo i { font-size: 24px; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="cryptoCanvas"></canvas>
+
+<div class="navbar">
+    <a href="#hero" class="logo">
+        <i class="fas fa-hammer"></i> 
+        MiningPRO
+    </a>
+
+    <nav id="desktop-nav">
+        <a href="#hero">Anasayfa</a>
+        <a href="#features-section">Nasıl Çalışır</a>
+        <a href="#why-us">Neden Biz?</a>
+        <a href="#pricing">Planlar</a>
+        <a href="#">Destek</a>
+    </nav>
+
+    <button id="openModalSingle" class="single-auth-button">Giriş / Kayıt Ol</button>
+</div>
+
+<section class="hero" id="hero">
+  <div class="container">
+      <h1>Geleceğin Bulut Madenciliği Şimdi Başlıyor.</h1>
+      <p>MiningPRO ile **%99.9 Uptime garantisi** altında, en güncel ekipmanlarla kesintisiz kripto madenciliğine başlayın. **Anlık ödeme** ve **yüksek verimlilik** ile hemen kazanmaya odaklanın.</p>
+      <div>
+        <button id="openModalHero" class="main-cta-button">Hemen Kazanmaya Başla <i class="fas fa-chart-line"></i></button>
+      </div>
+  </div>
+</section>
+
+<section class="stats-section">
+    <div class="container" style="display:flex; justify-content:center; gap:30px; flex-wrap:wrap;">
+        <div class="stat-card">
+            <h4>$15M+</h4>
+            <p>Ödenen Kazanç</p>
+        </div>
+        <div class="stat-card">
+            <h4>120.000+</h4>
+            <p>Aktif Yatırımcı</p>
+        </div>
+        <div class="stat-card">
+            <h4>2.5 EH/s</h4>
+            <p>Toplam Hash Gücü</p>
+        </div>
+    </div>
+</section>
+
+<hr style="border:1px solid rgba(243,186,47,0.2); width:80%; margin: 60px auto;">
+
+<section class="features" id="features-section">
+    <div class="container">
+        <h2 class="section-title">Kazanca Giden Basit Yol Haritası</h2>
+        <p style="opacity:0.8; margin-bottom: 20px; font-size: 18px; max-width: 800px; margin: 0 auto 40px auto;">MiningPRO'nun basit arayüzü sayesinde sadece 4 adımda madenciliğe başlayın ve gelirinizi günlük olarak cüzdanınıza çekin.</p>
+        <div class="features">
+            <div class="feature-card" style="animation: slideUp 1s ease 0.3s forwards; opacity: 0;">
+                <span class="icon"><i class="fas fa-user-plus"></i></span>
+                <h3>1. Hesap Oluşturun</h3>
+                <p>Güvenli e-posta doğrulama ile hesabınızı oluşturun ve davet kodunuzu arkadaşlarınızla paylaşın.</p>
+            </div>
+            <div class="feature-card" style="animation: slideUp 1s ease 0.6s forwards; opacity: 0;">
+                <span class="icon"><i class="fas fa-shopping-cart"></i></span>
+                <h3>2. Sözleşme Satın Alın</h3>
+                <p>Bütçenize ve hedeflerinize uygun madencilik gücünü (GH/s veya TH/s) saniyeler içinde satın alın.</p>
+            </div>
+            <div class="feature-card" style="animation: slideUp 1s ease 0.9s forwards; opacity: 0;">
+                <span class="icon"><i class="fas fa-bolt"></i></span>
+                <h3>3. Otomatik Kazım</h3>
+                <p>Satın alma sonrası kazım gücünüz anında devreye girer. Yönetim, bakım ve enerji maliyeti bize aittir.</p>
+            </div>
+            <div class="feature-card" style="animation: slideUp 1s ease 1.2s forwards; opacity: 0;">
+                <span class="icon"><i class="fas fa-hand-holding-usd"></i></span>
+                <h3>4. Günlük Ödeme</h3>
+                <p>Kazançlarınız her 24 saatte bir bakiyenize yansır. Bağladığınız cüzdana dilediğiniz zaman çekim yapın.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr style="border:1px solid rgba(243,186,47,0.2); width:80%; margin: 60px auto;">
+
+<section class="why-us" id="why-us">
+    <div class="container">
+        <h2 class="section-title">Madenciliğin Güvenli Limanı</h2>
+        <div class="why-cards">
+            <div class="why-card" style="animation: slideUp 1s ease 0.3s forwards; opacity: 0;">
+                <i class="fas fa-users-cog"></i>
+                <h3>Sıfır Yönetim</h3>
+                <p>Ekipman kurulumu, soğutma ve arıza takibi gibi tüm teknik detayları sizin için biz yönetiriz. Siz sadece kazancınıza odaklanın.</p>
+            </div>
+            <div class="why-card" style="animation: slideUp 1s ease 0.6s forwards; opacity: 0;">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Kurumsal Güvenlik</h3>
+                <p>Hesaplarınız 2FA koruması, SSL şifreleme ve çekim onayı ile kurumsal düzeyde korunur.</p>
+            </div>
+            <div class="why-card" style="animation: slideUp 1s ease 0.9s forwards; opacity: 0;">
+                <i class="fas fa-award"></i>
+                <h3>Kanıtlanmış Verimlilik</h3>
+                <p>En son nesil, enerji verimliliği yüksek ASIC minerlar kullanarak maksimum kazanç potansiyeli sunarız.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="pricing" id="pricing">
+    <div class="container">
+        <h2 class="section-title">Yüksek Getirili Madencilik Planlarımız</h2>
+        <div class="price-cards">
+            <div class="price-card" style="animation: slideUp 1s ease 0.3s forwards; opacity: 0;">
+                <h3>Başlangıç</h3>
+                <div class="hash-rate">100 GH/s <span>$35</span></div>
+                <p style="opacity: 0.7; margin-bottom: 15px;">1 Yıl Sözleşme | Düşük Bakım Ücreti</p>
+                <ul style="list-style: none; padding: 0; font-size: 15px; color: #ccc;">
+                    <li><i class="fas fa-check-circle" style="color:#4cd964; margin-right: 5px;"></i> Günlük Ödeme</li>
+                    <li><i class="fas fa-check-circle" style="color:#4cd964; margin-right: 5px;"></i> BTC, ETH Kazımı</li>
+                </ul>
+                <button id="openModalPrice1">Hemen Al</button>
+            </div>
+            <div class="price-card featured" style="animation: slideUp 1s ease 0.6s forwards; opacity: 0;">
+                <h3>PRO (En Çok Tercih Edilen)</h3>
+                <div class="hash-rate">1 TH/s <span>$300</span></div>
+                 <p style="opacity: 0.7; margin-bottom: 15px;">2 Yıl Sözleşme | Ortalama Bakım Ücreti</p>
+                <ul style="list-style: none; padding: 0; font-size: 15px; color: #ccc;">
+                    <li><i class="fas fa-check-circle" style="color:#4cd964; margin-right: 5px;"></i> Tüm Kriptolar</li>
+                    <li><i class="fas fa-check-circle" style="color:#4cd964; margin-right: 5px;"></i> Öncelikli Destek</li>
+                </ul>
+                <button id="openModalPrice2">Hemen Al</button>
+            </div>
+            <div class="price-card" style="animation: slideUp 1s ease 0.9s forwards; opacity: 0;">
+                <h3>Kurumsal</h3>
+                <div class="hash-rate">5 TH/s <span>$1400</span></div>
+                <p style="opacity: 0.7; margin-bottom: 15px;">Sınırsız Sözleşme | Düşük Bakım Ücreti</p>
+                <ul style="list-style: none; padding: 0; font-size: 15px; color: #ccc;">
+                    <li><i class="fas fa-check-circle" style="color:#4cd964; margin-right: 5px;"></i> Özelleştirilmiş Havuz</li>
+                    <li><i class="fas fa-check-circle" style="color:#4cd964; margin-right: 5px;"></i> Dedicated Server</li>
+                </ul>
+                <button id="openModalPrice3">Hemen Al</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal" id="authModal">
+  <div class="modal-content">
+    <span class="close-modal" id="closeModal">&times;</span>
+    <div class="form-switch">
+      <span id="switchLogin" class="active">Giriş Yap</span> | 
+      <span id="switchRegister">Kayıt Ol</span>
+    </div>
+
+    <div id="loginForm">
+      <input type="email" id="loginEmail" placeholder="E-posta Adresi" required>
+      <input type="password" id="loginPass" placeholder="Şifre" required>
+      <button id="loginBtn">Giriş Yap</button>
+      <div class="message" id="loginMessage"></div>
+    </div>
+
+    <div id="registerForm" style="display:none;">
+      <input type="text" id="regName" placeholder="Adınız" required>
+      <input type="text" id="regSurname" placeholder="Soyadınız" required>
+      <input type="email" id="regEmail" placeholder="E-posta Adresi" required>
+      <input type="password" id="regPass" placeholder="Şifre (En az 8 karakter)" required>
+      <input type="password" id="regPassConfirm" placeholder="Şifre Tekrarı" required>
+      
+      <div id="regRefContainer">
+          <label for="regRef">Davet Kodu (Opsiyonel)</label>
+          <input type="text" id="regRef" placeholder="Arkadaşınızın kodu veya boş bırakın..." value="">
+      </div>
+      
+      <div class="terms-checkbox">
+        <input type="checkbox" id="termsAgree">
+        <label for="termsAgree">
+          <a href="#">Kullanıcı Sözleşmesini</a> ve <a href="#">Gizlilik Kurallarını</a> **okudum ve onaylıyorum**.
+        </label>
+      </div>
+
+      <button id="registerBtn">Kayıt Ol ve Hemen Başla</button>
+      <div class="message" id="regMessage"></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+    <div class="container" style="padding: 20px 15px; background: #060f26; border-top: 1px solid #111e38; font-size: 14px;">
+      &copy; 2025 MiningPRO. Tüm Hakları Saklıdır. |
+      <a href="#" style="color:#f3ba2f; text-decoration: none;">Sözleşme</a> |
+      <a href="#" style="color:#f3ba2f; text-decoration: none;">Gizlilik</a> |
+      <a href="#" style="color:#f3ba2f; text-decoration: none;">İletişim</a>
+    </div>
+</footer>
+
+<script type="module">
+// =========================================================================
+// --- FIREBASE VE JAVASCRIPT LOGİĞİ ---
+// =========================================================================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+import { 
+    getAuth, 
+    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword,
+    sendEmailVerification,
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
+import { getFirestore, doc, setDoc, updateDoc, increment, getDoc } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
+
+// LÜTFEN KENDİ FIREBASE AYARLARINIZLA DEĞİŞTİRİN
+const firebaseConfig = {
+  apiKey: "AIzaSyBwpgITzHh2K3oYTRDaNbGVexPR8IcqXBU",
+  authDomain: "coinbase-a1aca.firebaseapp.com",
+  projectId: "coinbase-a1aca",
+  storageBucket: "coinbase-a1aca.firebasestorage.app",
+  messagingSenderId: "596259885244",
+  appId: "1:596259885244:web:186df79a6ccdc96f0d00b9",
+  measurementId: "G-Q4SMPE62HF"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth();
+const db = getFirestore();
+
+// DOM Elementleri
+const modal = document.getElementById("authModal");
+const openModalSingleButton = document.getElementById("openModalSingle");
+const openModalHeroButton = document.getElementById("openModalHero");
+const priceButtons = document.querySelectorAll("#openModalPrice1, #openModalPrice2, #openModalPrice3");
+const closeModal = document.getElementById("closeModal");
+
+const switchLogin = document.getElementById("switchLogin");
+const switchRegister = document.getElementById("switchRegister");
+const loginForm = document.getElementById("loginForm");
+const registerForm = document.getElementById("registerForm");
+
+const registerBtn = document.getElementById("registerBtn");
+const loginBtn = document.getElementById("loginBtn");
+const regMessage = document.getElementById("regMessage");
+const loginMessage = document.getElementById("loginMessage");
+const termsAgree = document.getElementById("termsAgree");
+const regRefInput = document.getElementById("regRef");
+
+// --- UTILS: Davet Kodunu URL'den Al ve Hata Çevirisi ---
+const urlParams = new URLSearchParams(window.location.search);
+const referrerId = urlParams.get('ref') || urlParams.get('invite');
+
+if (referrerId) {
+    regRefInput.value = referrerId;
+}
+
+const translateFirebaseError = (errorCode) => {
+    switch(errorCode) {
+        case 'auth/email-already-in-use': return 'Bu e-posta adresi zaten kullanımda.';
+        case 'auth/invalid-email': return 'Lütfen geçerli bir e-posta adresi girin.';
+        case 'auth/weak-password': return 'Şifre en az 8 karakter olmalıdır.';
+        case 'auth/user-not-found': return 'Bu e-posta adresine kayıtlı kullanıcı bulunamadı.';
+        case 'auth/wrong-password': return 'Hatalı şifre girdiniz.';
+        case 'auth/too-many-requests': return 'Çok fazla deneme yaptınız. Lütfen daha sonra tekrar deneyin.';
+        default: return 'Bilinmeyen bir hata oluştu. Lütfen tekrar deneyin.';
+    }
+}
+
+
+// --- Modal Açma/Kapatma ve Form Geçiş Fonksiyonları ---
+
+const openModal = (formType) => {
+    modal.style.display = "flex";
+    if (formType === 'register') {
+        switchRegister.click();
+    } else {
+        switchLogin.click();
+    }
+};
+
+openModalSingleButton.onclick = () => openModal('login');
+openModalHeroButton.onclick = () => openModal('register');
+priceButtons.forEach(button => {
+    button.onclick = () => openModal('register'); 
+});
+
+closeModal.onclick = () => modal.style.display = "none";
+window.onclick = e => { if(e.target == modal) modal.style.display = "none"; }
+
+const switchForm = (type) => {
+    if (type === 'login') {
+        loginForm.style.display = "block"; 
+        registerForm.style.display = "none"; 
+        switchLogin.classList.add("active"); 
+        switchRegister.classList.remove("active");
+    } else {
+        loginForm.style.display = "none"; 
+        registerForm.style.display = "block"; 
+        switchRegister.classList.add("active"); 
+        switchLogin.classList.remove("active"); 
+    }
+    regMessage.innerText = "";
+    loginMessage.innerText = ""; 
+    loginMessage.className = "message";
+    regMessage.className = "message";
+}
+switchLogin.onclick = () => switchForm('login');
+switchRegister.onclick = () => switchForm('register');
+
+
+// -------------------------------------------------------------------------
+// KAYIT OL (Davet Sistemi ve Gerçek E-posta Doğrulaması)
+// -------------------------------------------------------------------------
+registerBtn.onclick = async () => {
+  const name = document.getElementById("regName").value;
+  const surname = document.getElementById("regSurname").value; 
+  const email = document.getElementById("regEmail").value;
+  const pass = document.getElementById("regPass").value;
+  const passConfirm = document.getElementById("regPassConfirm").value; 
+  const referrer = regRefInput.value.trim(); // Davet kodu
+
+  regMessage.innerText = "";
+  regMessage.className = "message";
+
+  if (!name || !surname || !email || !pass || !passConfirm) {
+    regMessage.className = "message error";
+    regMessage.innerText = "Lütfen tüm zorunlu alanları doldurun!"; return;
+  }
+
+  if (pass !== passConfirm) {
+    regMessage.className = "message error";
+    regMessage.innerText = "Şifreler uyuşmuyor! Lütfen tekrar kontrol edin."; return;
+  }
+  
+  if (pass.length < 8) {
+    regMessage.className = "message error";
+    regMessage.innerText = "Şifre en az 8 karakter olmalıdır!"; return;
+  }
+
+  if (!termsAgree.checked) {
+    regMessage.className = "message error";
+    regMessage.innerText = "Kullanıcı Sözleşmesini onaylamalısınız!"; return;
+  }
+  
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+    const user = userCredential.user;
+
+    // 1. E-posta doğrulama linki gönder
+    await sendEmailVerification(user);
+
+    // 2. Davet Kodu Kontrolü ve Yönlendirme
+    let referrerUID = null;
+    if (referrer) {
+        const referrerSnap = await getDoc(doc(db, "users", referrer));
+        if (referrerSnap.exists()) {
+            referrerUID = referrer;
+            // Davet eden kullanıcının davet sayısını artır
+            await updateDoc(doc(db, "users", referrerUID), {
+                invites: increment(1)
+            });
+        }
+    }
+
+
+    // 3. Kullanıcı verilerini Firestore'a kaydet
+    await setDoc(doc(db, "users", user.uid), { 
+      name, 
+      surname, 
+      email, 
+      isVerified: false, 
+      balance: 0, 
+      hashPower: 0,
+      referrerID: referrerUID, // Referans kodu
+      invites: 0, // Kendi davet sayısı
+      registeredAt: new Date()
+    });
+
+    regMessage.className = "message success";
+    regMessage.innerText = "Kayıt Başarılı! Lütfen E-posta adresinize gönderilen doğrulama linkine tıklayın.";
+    
+    // Formu temizle
+    document.getElementById("regName").value = "";
+    document.getElementById("regSurname").value = "";
+    document.getElementById("regEmail").value = "";
+    document.getElementById("regPass").value = "";
+    document.getElementById("regPassConfirm").value = "";
+    regRefInput.value = "";
+    termsAgree.checked = false;
+
+  } catch (err) { 
+    regMessage.className = "message error";
+    regMessage.innerText = "Hata: " + translateFirebaseError(err.code);
+  }
+}
+
+// -------------------------------------------------------------------------
+// GİRİŞ YAP (Doğrulama Kontrolü ve Yönlendirme)
+// -------------------------------------------------------------------------
+loginBtn.onclick = async () => {
+  const email = document.getElementById("loginEmail").value;
+  const pass = document.getElementById("loginPass").value;
+
+  loginMessage.innerText = "";
+  loginMessage.className = "message";
+
+  try { 
+    const userCredential = await signInWithEmailAndPassword(auth, email, pass); 
+    const user = userCredential.user;
+    
+    if (!user.emailVerified) {
+        // E-posta doğrulanmamışsa
+        await auth.signOut();
+        loginMessage.className = "message error";
+        loginMessage.innerText = "Giriş Başarısız: Lütfen e-posta adresinizi doğrulayın.";
+        
+        let resendBtn = document.createElement('button');
+        resendBtn.innerText = "Doğrulama E-postasını Tekrar Gönder";
+        resendBtn.style.marginTop = '15px';
+        resendBtn.style.background = '#f3ba2f';
+        resendBtn.style.color = '#060f26';
+        resendBtn.style.fontWeight = '700';
+        resendBtn.style.fontSize = '15px';
+        resendBtn.style.padding = '10px';
+        resendBtn.style.borderRadius = '8px';
+        
+        // Önceki butonu kaldır (varsa)
+        const existingBtn = document.querySelector('#loginForm button:last-of-type');
+        if (existingBtn && existingBtn !== loginBtn) existingBtn.remove();
+
+        document.getElementById("loginForm").appendChild(resendBtn);
+        
+        resendBtn.onclick = async () => {
+            try {
+                await sendEmailVerification(user);
+                loginMessage.className = "message success";
+                loginMessage.innerText = "Doğrulama e-postası tekrar gönderildi! Lütfen Gelen Kutunuzu kontrol edin.";
+                resendBtn.remove();
+            } catch (error) {
+                loginMessage.className = "message error";
+                loginMessage.innerText = "Hata oluştu. Tekrar deneyin. ";
+            }
+        };
+        return;
+
+    }
+
+    // E-posta DOĞRULANMIŞSA:
+    // Firestore'da isVerified bayrağını true yap (ilk girişinde)
+    const userDocRef = doc(db, "users", user.uid);
+    await updateDoc(userDocRef, { isVerified: true });
+
+    loginMessage.className = "message success";
+    loginMessage.innerText = "Başarıyla Giriş Yapıldı! Panel sayfasına yönlendiriliyorsunuz...";
+    
+    // Yönlendirme Kodu (miningpro.html)
+    setTimeout(() => { window.location.href = "miningpro.html"; }, 1000); 
+    
+  } catch(err) { 
+    loginMessage.className = "message error";
+    loginMessage.innerText = "Hata: " + translateFirebaseError(err.code); 
+  }
+}
+
+// -------------------------------------------------------------------------
+// OTOMATİK YÖNLENDİRME (Kullanıcı zaten giriş yapmışsa)
+// -------------------------------------------------------------------------
+onAuthStateChanged(auth, (user) => {
+    if (user && user.emailVerified) {
+        // Kullanıcı giriş yapmış ve e-postası doğrulanmışsa, doğrudan panele yönlendir
+        window.location.href = "miningpro.html";
+    }
+    // Eğer giriş yapmamışsa veya e-posta doğrulamamışsa, sayfada kalır ve giriş yapması istenir.
+});
+
+// -------------------------------------------------------------------------
+// CANVAS KRİPTO ANİMASYONU (Mevcut kodunuz)
+// -------------------------------------------------------------------------
+const canvas = document.getElementById("cryptoCanvas");
+const ctx = canvas.getContext("2d");
+const resizeCanvas = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+let icons = [];
+const cryptoImgs = [
+  "https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=023",
+  "https://cryptologos.cc/logos/ethereum-eth-logo.png?v=023",
+  "https://cryptologos.cc/logos/dogecoin-doge-logo.png?v=023",
+  "https://cryptologos.cc/logos/litecoin-ltc-logo.png?v=023",
+  "https://cryptologos.cc/logos/monero-xmr-logo.png?v=023"
+];
+
+const iconSize = 30; 
+const iconCount = 50; 
+
+for (let i = 0; i < iconCount; i++) {
+  let img = new Image();
+  img.src = cryptoImgs[Math.floor(Math.random() * cryptoImgs.length)];
+  icons.push({
+    img, 
+    x: Math.random() * canvas.width, 
+    y: Math.random() * canvas.height, 
+    dx: (Math.random() - 0.5) * 0.5, 
+    dy: (Math.random() - 0.5) * 0.5
+  });
+}
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.globalAlpha = 0.4; 
+  icons.forEach(icon => {
+    icon.x += icon.dx;
+    icon.y += icon.dy;
+
+    if (icon.x + iconSize > canvas.width || icon.x < 0) icon.dx = -icon.dx;
+    if (icon.y + iconSize > canvas.height || icon.y < 0) icon.dy = -icon.dy;
+    
+    ctx.drawImage(icon.img, icon.x, icon.y, iconSize, iconSize);
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
+
+</body>
+</html>
